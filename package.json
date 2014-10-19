@@ -4,6 +4,8 @@
 	"devDependencies": {
 		"colors": "~0.6.2",
 		"node-rest-client": "~1.0.0",
-		"deasync": "0.0.7"
+		"deasync": "0.0.7",
+		"express": "~4.7.2",
+		"socket.io": "~1.0.6"
 	}
 }
