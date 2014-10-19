@@ -2,6 +2,8 @@
 	"name": "core-backend",
 	"version": "0.0.1",
 	"devDependencies": {
-		"colors": "~0.6.2"
+		"colors": "~0.6.2",
+		"node-rest-client": "~1.0.0",
+		"deasync": "0.0.7"
 	}
 }

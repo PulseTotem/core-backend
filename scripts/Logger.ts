@@ -2,7 +2,7 @@
  * @author Christian Brel <christian@the6thscreen.fr, ch.brel@gmail.com>
  */
 
-/// <reference path="../../../libsdef/colors.d.ts" />
+/// <reference path="../libsdef/colors.d.ts" />
 /// <reference path="./LoggerLevel.ts" />
 
 var colors = require('colors');
