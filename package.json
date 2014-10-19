@@ -1,0 +1,7 @@
+{
+	"name": "core-backend",
+	"version": "0.0.1",
+	"devDependencies": {
+		"colors": "~0.6.2"
+	}
+}
