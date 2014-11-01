@@ -2,12 +2,15 @@
  * @author Christian Brel <christian@the6thscreen.fr, ch.brel@gmail.com>
  */
 
-/// <reference path="../libsdef/node.d.ts" />
-/// <reference path="../libsdef/express.d.ts" />
-/// <reference path="../libsdef/socket.io-0.9.10.d.ts" />
+/// <reference path="../../libsdef/node.d.ts" />
+/// <reference path="../../libsdef/express.d.ts" />
+/// <reference path="../../libsdef/socket.io-0.9.10.d.ts" />
 
-/// <reference path="./Logger.ts" />
-/// <reference path="./LoggerLevel.ts" />
+/// <reference path="../Logger.ts" />
+/// <reference path="../LoggerLevel.ts" />
+
+/// <reference path="./NamespaceManager"/>
+
 
 var http = require("http");
 var express = require("express");
@@ -30,6 +33,15 @@ class Server {
     private _listeningPort : number;
 
     /**
+     * Server's app.
+     *
+     * @property _app
+     * @type any
+     * @private
+     */
+    private _app : any;
+
+    /**
      * Server's http server.
      *
      * @property _httpServer
@@ -48,21 +60,31 @@ class Server {
     private _ioServer : any;
 
     /**
+     * NamspaceManager list.
+     *
+     * @property _namespaceManagers
+     * @type Array<NamespaceManager>
+     * @private
+     */
+    private _namespaceManagers : Array<NamespaceManager>;
+
+    /**
      * Constructor.
      *
      * @param {number} listeningPort - Listening port.
      * @param {Array<string>} arguments - Command line arguments.
      */
     constructor(listeningPort : number, arguments : Array<string>) {
+        this._namespaceManagers = new Array<NamespaceManager>();
         this._listeningPort = listeningPort;
 
         this._argumentsProcess(arguments);
 
-        var app = express();
-        this._httpServer = http.createServer(app);
+        this._app = express();
+        this._httpServer = http.createServer(this._app);
         this._ioServer = sio.listen(this._httpServer);
 
-        app.get('/', function(req, res){
+        this._app.get('/', function(req, res){
             res.send('<h1>Are you lost ? * &lt;--- You are here !</h1>');
         });
     }
@@ -104,7 +126,7 @@ class Server {
 
         Logger.setLevel(logLevel);
 
-        this.onArgumentsProcess();
+        this.onArgumentsProcess(arguments);
     }
 
     /**
@@ -115,21 +137,31 @@ class Server {
     run() {
         var self = this;
 
-        this._httpServer.listen(this._listeningPort, this.onListen);
+        this._httpServer.listen(this._listeningPort, function() {
+            self.onListen();
+        });
     }
 
-    addNamespace(namespace : string) {
+    /**
+     * Declare a namespace for server.
+     *
+     * @method addNamespace
+     * @param {string} namespace - Namespace name to add.
+     * @param {Class} namespaceManager - NamespaceManager class.
+     */
+    addNamespace(namespace : string, namespaceManager : any) {
+        var self = this;
+
         var newNamespace = this._ioServer.of("/" + namespace);
 
         newNamespace.on('connection', function(socket){
-            Logger.info("New The 6th Screen SourcesServer Connection : " + socket.id);
+            Logger.info("New Client Connection for namespace '" + namespace + "' : " + socket.id);
 
-            socket.on('RetrieveFeedContent', function(params) {
-                self._retrieveFeedContent(params, socket);
-            });
+            self._namespaceManagers[socket.id] = new namespaceManager(socket);
 
             socket.on('disconnect', function(){
-                Logger.info("The 6th Screen SourcesServer disconnected : " + socket.id);
+                delete(self._namespaceManagers[socket.id]);
+                Logger.info("Client disconnected for namespace '" + namespace + "' : " + socket.id);
             });
         });
     }
