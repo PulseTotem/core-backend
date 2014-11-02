@@ -26,47 +26,42 @@ class Server {
     /**
      * Server's listening port.
      *
-     * @property _listeningPort
+     * @property listeningPort
      * @type number
-     * @private
      */
-    private _listeningPort : number;
+    listeningPort : number;
 
     /**
      * Server's app.
      *
-     * @property _app
+     * @property app
      * @type any
-     * @private
      */
-    private _app : any;
+    app : any;
 
     /**
      * Server's http server.
      *
-     * @property _httpServer
+     * @property httpServer
      * @type any
-     * @private
      */
-    private _httpServer : any;
+    httpServer : any;
 
     /**
      * Socket.io Server.
      *
-     * @property _ioServer
+     * @property ioServer
      * @type any
-     * @private
      */
-    private _ioServer : any;
+    ioServer : any;
 
     /**
      * NamspaceManager list.
      *
-     * @property _namespaceManagers
+     * @property namespaceManagers
      * @type Array<NamespaceManager>
-     * @private
      */
-    private _namespaceManagers : Array<NamespaceManager>;
+    namespaceManagers : Array<NamespaceManager>;
 
     /**
      * Constructor.
@@ -75,16 +70,16 @@ class Server {
      * @param {Array<string>} arguments - Command line arguments.
      */
     constructor(listeningPort : number, arguments : Array<string>) {
-        this._namespaceManagers = new Array<NamespaceManager>();
-        this._listeningPort = listeningPort;
+        this.namespaceManagers = new Array<NamespaceManager>();
+        this.listeningPort = listeningPort;
 
         this._argumentsProcess(arguments);
 
-        this._app = express();
-        this._httpServer = http.createServer(this._app);
-        this._ioServer = sio.listen(this._httpServer);
+        this.app = express();
+        this.httpServer = http.createServer(this.app);
+        this.ioServer = sio.listen(this.httpServer);
 
-        this._app.get('/', function(req, res){
+        this.app.get('/', function(req, res){
             res.send('<h1>Are you lost ? * &lt;--- You are here !</h1>');
         });
 
@@ -139,7 +134,7 @@ class Server {
     run() {
         var self = this;
 
-        this._httpServer.listen(this._listeningPort, function() {
+        this.httpServer.listen(this.listeningPort, function() {
             self.onListen();
         });
     }
@@ -154,15 +149,15 @@ class Server {
     addNamespace(namespace : string, namespaceManager : any) {
         var self = this;
 
-        var newNamespace = this._ioServer.of("/" + namespace);
+        var newNamespace = this.ioServer.of("/" + namespace);
 
         newNamespace.on('connection', function(socket){
             Logger.info("New Client Connection for namespace '" + namespace + "' : " + socket.id);
 
-            self._namespaceManagers[socket.id] = new namespaceManager(socket);
+            self.namespaceManagers[socket.id] = new namespaceManager(socket);
 
             socket.on('disconnect', function(){
-                delete(self._namespaceManagers[socket.id]);
+                delete(self.namespaceManagers[socket.id]);
                 Logger.info("Client disconnected for namespace '" + namespace + "' : " + socket.id);
             });
         });
@@ -184,6 +179,6 @@ class Server {
      * @method onListen
      */
     onListen() {
-        Logger.info("Server listening on *:" + this._listeningPort);
+        Logger.info("Server listening on *:" + this.listeningPort);
     }
 }

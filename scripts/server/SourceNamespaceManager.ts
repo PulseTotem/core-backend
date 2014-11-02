@@ -1,0 +1,105 @@
+/**
+ * @author Christian Brel <christian@the6thscreen.fr, ch.brel@gmail.com>
+ */
+
+/// <reference path="../../libsdef/node-uuid.d.ts" />
+
+/// <reference path="../Logger.ts" />
+
+/// <reference path="./SourceServer.ts" />
+/// <reference path="./NamespaceManager.ts" />
+/// <reference path="./ClientCall.ts" />
+
+var uuid = require('node-uuid');
+
+class SourceNamespaceManager extends NamespaceManager {
+
+    /**
+     * Source Server.
+     *
+     * @property _sourceServer
+     * @type SourceServer
+     * @private
+     */
+    private _sourceServer : SourceServer;
+
+    /**
+     * Constructor.
+     *
+     * @constructor
+     * @param {any} socket - The socket.
+     */
+    constructor(socket : any) {
+        super(socket);
+
+        super.addListenerToSocket('newClient', this.processNewClient);
+    }
+
+    /**
+     * Set the source server.
+     *
+     * @method setServer
+     * @param server
+     */
+    setServer(server : SourceServer) {
+        Logger.debug("Set Source Server.");
+        this._sourceServer = server;
+    }
+
+    /**
+     * Process new Client connection.
+     *
+     * @method processNewClient
+     * @param {Object} clientCallDescription - Client's call description.
+     * @param {SourceNamespaceManager} self - The SourceNamespaceManager's instance.
+     */
+    processNewClient(clientCallDescription : any, self : SourceNamespaceManager = null) {
+        Logger.debug(clientCallDescription);
+        //clientCallDescription = {"zoneId" : number, "callId" : number, "callHash" : string}
+        if(self == null) {
+            self = this;
+        }
+
+        var clientCall = self._sourceServer.retrieveClientCall(clientCallDescription.callHash);
+
+        if(clientCall != null) {
+            var callBack = clientCall.getCallCallback();
+            callBack(clientCallDescription.zoneId, clientCallDescription.callId, clientCall.getCallParams(), self);
+        } else {
+            //TODO - Manage error...
+            Logger.error("ClientCall with hash '" + clientCallDescription.callHash + "' wasn't retrieved...");
+        }
+    }
+
+    /**
+     * Add a listener to socket.
+     *
+     * @method addListenerToSocket
+     * @param {string} listenerName - The listener name.
+     * @param {Function} callBackFunction - The callback function for listener.
+     */
+    addListenerToSocket(listenerName : string, callBackFunction : Function) {
+        var self = this;
+
+        var hash = uuid.v1();
+
+        this.socket.on(listenerName, function(params) {
+            Logger.debug("New ClientCall !");
+            self._sourceServer.addClientCall(new ClientCall(hash, params, callBackFunction));
+            self.socket.emit("connectionHash", {"hash" : hash});
+        });
+    }
+
+    /**
+     * Send new Info to client.
+     *
+     * @method sendNewInfoToClient
+     * @param {number} zoneId - The Zone's Id.
+     * @param {number} callId - The Call's Id.
+     * @param {Info} newInfo - The Info to send.
+     */
+    sendNewInfoToClient(zoneId : number, callId : number, newInfo : Info) {
+        Logger.debug("Send New info.");
+        this.socket.emit("zones/" + zoneId + "/calls/" + callId + "/newInfo", newInfo);
+    }
+}
