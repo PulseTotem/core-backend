@@ -87,6 +87,8 @@ class Server {
         this._app.get('/', function(req, res){
             res.send('<h1>Are you lost ? * &lt;--- You are here !</h1>');
         });
+
+        //TODO : io.origins("allowedHosts"); // see : http://socket.io/docs/server-api/#server#origins(v:string):server
     }
 
     /**
