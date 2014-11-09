@@ -41,4 +41,13 @@ class NamespaceManager {
             callBackFunction(content, self);
         });
     }
+
+    /**
+     * Method called when socket is disconnected.
+     *
+     * @method onDisconnection
+     */
+    onDisconnection() {
+        // Nothing to do.
+    }
 }
