@@ -154,10 +154,11 @@ class Server {
         newNamespace.on('connection', function(socket){
             Logger.info("New Client Connection for namespace '" + namespace + "' : " + socket.id);
 
-            self.namespaceManagers[socket.id] = new namespaceManager(socket);
+            var snm : NamespaceManager = new namespaceManager(socket);
+            self.namespaceManagers[socket.id] = snm;
 
             socket.on('disconnect', function(){
-                self.namespaceManagers[socket.id].onDisconnection();
+                snm.onDisconnection();
                 delete(self.namespaceManagers[socket.id]);
                 Logger.info("Client disconnected for namespace '" + namespace + "' : " + socket.id);
             });

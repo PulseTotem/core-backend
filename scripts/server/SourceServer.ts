@@ -24,6 +24,14 @@ class SourceServer extends Server {
     private _clientCalls: Array<ClientCall>;
 
     /**
+     * Map between Sockets' Id and Call's Hash.
+     *
+     * @property _mapSocketIdHash
+     * @type Array<string>
+     */
+    private _mapSocketIdHash: Array<string>;
+
+    /**
      * Constructor.
      *
      * @param {number} listeningPort - Listening port.
@@ -32,6 +40,7 @@ class SourceServer extends Server {
     constructor(listeningPort : number, arguments : Array<string>) {
         super(listeningPort, arguments);
         this._clientCalls = new Array<ClientCall>();
+        this._mapSocketIdHash = new Array<string>();
     }
 
     /**
@@ -54,6 +63,7 @@ class SourceServer extends Server {
             self.namespaceManagers[socket.id] = snm;
 
             socket.on('disconnect', function(){
+                snm.onClientDisconnection();
                 delete(self.namespaceManagers[socket.id]);
                 Logger.info("Client disconnected for namespace '" + namespace + "' : " + socket.id);
             });
@@ -82,6 +92,31 @@ class SourceServer extends Server {
             if(clientCall.getCallHash() == callHash) {
                 return clientCall;
             }
+        }
+
+        return null;
+    }
+
+    /**
+     * Associate a call's hash to socket Id.
+     *
+     * @method setHashForSocketId
+     * @param {string} socketId - The Socket's Id.
+     * @param {string} callHash - The Call's hash.
+     */
+    setHashForSocketId(socketId : string, callHash : string) {
+        this._mapSocketIdHash[socketId] = callHash;
+    }
+
+    /**
+     * Returns call's hash associate to socket Id.
+     *
+     * @method setHashForSocketId
+     * @param {string} socketId - The Socket's Id.
+     */
+    getHashForSocketId(socketId : string) {
+        if(typeof(this._mapSocketIdHash[socketId]) != "undefined") {
+            return this._mapSocketIdHash[socketId];
         }
 
         return null;

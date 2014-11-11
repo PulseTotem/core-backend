@@ -32,7 +32,8 @@ class SourceNamespaceManager extends NamespaceManager {
     constructor(socket : any) {
         super(socket);
 
-        super.addListenerToSocket('newClient', this.processNewClient);
+        super.addListenerToSocket('ping', this.processPing);
+        super.addListenerToSocket('newCall', this.processNewCall);
     }
 
     /**
@@ -47,15 +48,15 @@ class SourceNamespaceManager extends NamespaceManager {
     }
 
     /**
-     * Process new Client connection.
+     * Process ping.
      *
-     * @method processNewClient
+     * @method processPing
      * @param {Object} clientCallDescription - Client's call description.
      * @param {SourceNamespaceManager} self - The SourceNamespaceManager's instance.
      */
-    processNewClient(clientCallDescription : any, self : SourceNamespaceManager = null) {
+    processPing(clientCallDescription : any, self : SourceNamespaceManager = null) {
         Logger.debug(clientCallDescription);
-        //clientCallDescription = {"zoneId" : number, "callId" : number, "callHash" : string}
+        //clientCallDescription = {"callHash" : string}
         if(self == null) {
             self = this;
         }
@@ -63,8 +64,39 @@ class SourceNamespaceManager extends NamespaceManager {
         var clientCall = self._sourceServer.retrieveClientCall(clientCallDescription.callHash);
 
         if(clientCall != null) {
+            if(self._sourceServer.getHashForSocketId(self.socket.id) == clientCallDescription.callHash) {
+                self.socket.emit("pingAnswer", {"sendingInfos" : true});
+            } else {
+                self.socket.emit("pingAnswer", {"sendingInfos" : false});
+            }
+        } else {
+            //TODO - Manage error...
+            Logger.error("ClientCall with hash '" + clientCallDescription.callHash + "' wasn't retrieved...");
+        }
+    }
+
+    /**
+     * Process new Call connection.
+     *
+     * @method processNewCall
+     * @param {Object} clientCallDescription - Client's call description.
+     * @param {SourceNamespaceManager} self - The SourceNamespaceManager's instance.
+     */
+    processNewCall(clientCallDescription : any, self : SourceNamespaceManager = null) {
+        Logger.debug(clientCallDescription);
+        //clientCallDescription = {"callHash" : string}
+        if(self == null) {
+            self = this;
+        }
+
+        var clientCall = self._sourceServer.retrieveClientCall(clientCallDescription.callHash);
+
+        if(clientCall != null) {
+
+            self._sourceServer.setHashForSocketId(self.socket.id, clientCallDescription.callHash);
+
             var callBack = clientCall.getCallCallback();
-            callBack(clientCallDescription.zoneId, clientCallDescription.callId, clientCall.getCallParams(), self);
+            callBack(clientCall.getCallParams(), self);
         } else {
             //TODO - Manage error...
             Logger.error("ClientCall with hash '" + clientCallDescription.callHash + "' wasn't retrieved...");
@@ -94,12 +126,20 @@ class SourceNamespaceManager extends NamespaceManager {
      * Send new Info to client.
      *
      * @method sendNewInfoToClient
-     * @param {number} zoneId - The Zone's Id.
-     * @param {number} callId - The Call's Id.
      * @param {Info} newInfo - The Info to send.
      */
-    sendNewInfoToClient(zoneId : number, callId : number, newInfo : Info) {
+    sendNewInfoToClient(newInfo : Info) {
         Logger.debug("Send New info.");
-        this.socket.emit("zones/" + zoneId + "/calls/" + callId + "/newInfo", newInfo);
+        this.socket.emit("newInfo", newInfo);
+    }
+
+    /**
+     * Method called when socket is disconnected.
+     *
+     * @method onClientDisconnection
+     */
+    onClientDisconnection() {
+        this._sourceServer.setHashForSocketId(this.socket.id, null);
+        this.onDisconnection();
     }
 }
