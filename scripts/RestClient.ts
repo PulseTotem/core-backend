@@ -11,8 +11,6 @@
 
 var Client = require('node-rest-client').Client;
 
-var deasync = require('deasync');
-
 /**
  * Represents a REST client.
  *
@@ -24,10 +22,10 @@ class RestClient {
      * Client.
      *
      * @property client
-     * @type any
+     * @type ClientObject
      * @static
      */
-    static client : any = null;
+    static client : ClientObject = null;
 
     /**
      * Return the REST client from lib.
@@ -42,42 +40,40 @@ class RestClient {
         return RestClient.client;
     }
 
-	private static manageLogging(strType : String, url : String, successCallback : Function = null, failCallback : Function = null) : Array<Function> {
-		var success : Function = null;
-		var fail : Function = null;
+    private static manageCallbacks(strType : String, url : String, successCallback : Function = null, failCallback : Function = null) : Array<Function> {
+        var success : Function = null;
+        var fail : Function = null;
 
-		if (successCallback != null) {
-			success = successCallback;
-		} else {
-			success = function() {
-				Logger.info("RestClient : Success to send "+strType+" message to URL '" + url + "'.");
-			};
-		}
+        if (successCallback != null) {
+            success = successCallback;
+        } else {
+            success = function(result) {
+                Logger.info("RestClient : Success to send "+strType+" message to URL '" + url + "'.");
+                Logger.info(JSON.stringify(result));
+            };
+        }
 
-		if (failCallback != null) {
-			fail = failCallback;
-		} else {
-			fail = function() {
-				Logger.warn("RestClient : Fail to send "+strType+" message to URL '" + url + "'.");
-			};
-		}
+        if (failCallback != null) {
+            fail = failCallback;
+        } else {
+            fail = function(result) {
+                Logger.warn("RestClient : Fail to send "+strType+" message to URL '" + url + "'.");
+                Logger.warn(JSON.stringify(result));
+            };
+        }
 
-		return [success, fail];
-	}
+        var returnSuccess : Function = function(data, response) {
+            var result : RestClientResponse = new RestClientResponse(true, response, JSON.parse(data));
+            success(result);
+        };
 
-	private static syncCallbacks(sync : RestClientSync) : Array<Function> {
-		var success : Function = function(data, response) {
-			var result : RestClientResponse = new RestClientResponse(true, response, JSON.parse(data));
-			sync.finishRequest(result);
-		};
+        var returnFail : Function = function(error) {
+            var result : RestClientResponse = new RestClientResponse(false, error);
+            fail(result);
+        };
 
-		var fail : Function = function(error) {
-			var result : RestClientResponse = new RestClientResponse(false, error);
-			sync.finishRequest(result);
-		};
-
-		return [success, fail];
-	}
+        return [returnSuccess, returnFail];
+    }
 
 	private static createArgs(data : any) : Object {
 		var result = {
@@ -100,30 +96,14 @@ class RestClient {
      * @param {Function} failCallback - The callback function when fail.
      */
     static get(url : string, successCallback : Function = null, failCallback : Function = null) {
-		var callbacks : Array<Function> = RestClient.manageLogging("GET", url, successCallback, failCallback);
+        var callbacks : Array<Function> = RestClient.manageCallbacks("GET", url, successCallback, failCallback);
 
-        RestClient.getClient().get(url, callbacks[0]).on('error',callbacks[1]);
-    }
-
-    /**
-     * Send a GET message to URL in parameter, in a synchronous way.
-     *
-     * @method getSync
-     * @static
-     * @param {string} url - The url to get.
-     */
-    static getSync(url : string) : RestClientResponse {
-
-            var sync : RestClientSync = new RestClientSync();
-	        var callbacks : Array<Function> = RestClient.syncCallbacks(sync);
-
-            RestClient.getClient().get(url, callbacks[0]).on('error',callbacks[1]);
-
-            while(!sync.done()) {
-                deasync.sleep(5);
-            }
-
-            return sync.result();
+        var req = RestClient.getClient().get(url, callbacks[0]);
+        req.on('error', callbacks[1]);
+        /*
+        req.on('requestTimeout', callbacks[2]);
+        req.on('responseTimeout', callbacks[3]);
+        */
     }
 
     /**
@@ -132,7 +112,7 @@ class RestClient {
      * @method post
      * @static
      * @param {string} url - The url to post.
-     * @param {JSONObject} args - The arguments for POST message. Schema for this JSON Object is :
+     * @param {JSONObject} data - The arguments for POST message. Schema for this JSON Object is :
      *  {
      *      data: { test: "hello" },
      *      headers:{"Content-Type": "application/json"}
@@ -140,34 +120,18 @@ class RestClient {
      * @param {Function} successCallback - The callback function when success.
      * @param {Function} failCallback - The callback function when fail.
      */
-    static post(url : string, args : any, successCallback : Function = null, failCallback : Function = null) {
-	    var callbacks : Array<Function> = RestClient.manageLogging("POST", url, successCallback, failCallback);
-
-	    RestClient.getClient().post(url, args, callbacks[0]).on('error',callbacks[1]);
-    }
-
-    /**
-     * Send a POST message to URL in parameter, in a synchronous way.
-     *
-     * @method postSync
-     * @static
-     * @param {string} url - The url to post.
-     * @param {any} data - The data for POST message.
-     */
-    static postSync(url : string, data : any) : RestClientResponse {
-
-	    var sync : RestClientSync = new RestClientSync();
-	    var callbacks : Array<Function> = RestClient.syncCallbacks(sync);
+    static post(url : string, data : any, successCallback : Function = null, failCallback : Function = null) {
+	    var callbacks : Array<Function> = RestClient.manageCallbacks("POST", url, successCallback, failCallback);
 
         var args = RestClient.createArgs(data);
 
-        RestClient.getClient().post(url, args, callbacks[0]).on('error',callbacks[1]);
+        var req = RestClient.getClient().post(url, args, callbacks[0]);
+        req.on('error', callbacks[1]);
+        /*
+         req.on('requestTimeout', callbacks[2]);
+         req.on('responseTimeout', callbacks[3]);
+         */
 
-        while(!sync.done()) {
-            deasync.sleep(5);
-        }
-
-        return sync.result();
     }
 
     /**
@@ -176,7 +140,7 @@ class RestClient {
      * @method put
      * @static
      * @param {string} url - The url to post.
-     * @param {any} args - The arguments for PUT message. Schema for this JSON Object is :
+     * @param {any} data - The arguments for PUT message. Schema for this JSON Object is :
      *  {
      *      data: { test: "hello" },
      *      headers:{"Content-Type": "application/json"}
@@ -184,34 +148,17 @@ class RestClient {
      * @param {Function} successCallback - The callback function when success.
      * @param {Function} failCallback - The callback function when fail.
      */
-    static put(url : string, args : any, successCallback : Function = null, failCallback : Function = null) {
-	    var callbacks : Array<Function> = RestClient.manageLogging("PUT", url, successCallback, failCallback);
+    static put(url : string, data : any, successCallback : Function = null, failCallback : Function = null) {
+	    var callbacks : Array<Function> = RestClient.manageCallbacks("PUT", url, successCallback, failCallback);
 
-	    RestClient.getClient().put(url, args, callbacks[0]).on('error',callbacks[1]);
-    }
+        var args = RestClient.createArgs(data);
 
-    /**
-     * Send a PUT message to URL in parameter, in a synchronous way.
-     *
-     * @method putSync
-     * @static
-     * @param {string} url - The url to put.
-     * @param {any} data - The data for PUT message.
-     */
-    static putSync(url : string, data : any) : RestClientResponse {
-
-	    var sync : RestClientSync = new RestClientSync();
-	    var callbacks : Array<Function> = RestClient.syncCallbacks(sync);
-
-	    var args = RestClient.createArgs(data);
-
-        RestClient.getClient().put(url, args, callbacks[0]).on('error',callbacks[1]);
-
-        while(!sync.done()) {
-            deasync.sleep(5);
-        }
-
-        return sync.result();
+        var req = RestClient.getClient().put(url, args, callbacks[0]);
+        req.on('error', callbacks[1]);
+        /*
+         req.on('requestTimeout', callbacks[2]);
+         req.on('responseTimeout', callbacks[3]);
+         */
     }
 
     /**
@@ -220,7 +167,7 @@ class RestClient {
      * @method patch
      * @static
      * @param {string} url - The url to post.
-     * @param {JSONObject} args - The arguments for PATCH message. Schema for this JSON Object is :
+     * @param {JSONObject} data - The arguments for PATCH message. Schema for this JSON Object is :
      *  {
      *      data: { test: "hello" },
      *      headers:{"Content-Type": "application/json"}
@@ -228,34 +175,17 @@ class RestClient {
      * @param {Function} successCallback - The callback function when success.
      * @param {Function} failCallback - The callback function when fail.
      */
-    static patch(url : string, args : any, successCallback : Function = null, failCallback : Function = null) {
-	    var callbacks : Array<Function> = RestClient.manageLogging("PATCH", url, successCallback, failCallback);
+    static patch(url : string, data : any, successCallback : Function = null, failCallback : Function = null) {
+	    var callbacks : Array<Function> = RestClient.manageCallbacks("PATCH", url, successCallback, failCallback);
 
-	    RestClient.getClient().patch(url, args, callbacks[0]).on('error',callbacks[1]);
-    }
+        var args = RestClient.createArgs(data);
 
-    /**
-     * Send a PATCH message to URL in parameter, in a synchronous way.
-     *
-     * @method patchSync
-     * @static
-     * @param {string} url - The url to patch.
-     * @param {any} data - The data for PATCH message.
-     */
-    static patchSync(url : string, data : any) : RestClientResponse {
-
-	    var sync : RestClientSync = new RestClientSync();
-	    var callbacks : Array<Function> = RestClient.syncCallbacks(sync);
-
-	    var args = RestClient.createArgs(data);
-
-        RestClient.getClient().patch(url, args, callbacks[0]).on('error', callbacks[1]);
-
-        while(!sync.done()) {
-            deasync.sleep(5);
-        }
-
-        return sync.result();
+        var req = RestClient.getClient().patch(url, args, callbacks[0]);
+        req.on('error', callbacks[1]);
+        /*
+         req.on('requestTimeout', callbacks[2]);
+         req.on('responseTimeout', callbacks[3]);
+         */
     }
 
     /**
@@ -268,30 +198,14 @@ class RestClient {
      * @param {Function} failCallback - The callback function when fail.
      */
     static delete(url : string, successCallback : Function = null, failCallback : Function = null) {
-	    var callbacks : Array<Function> = RestClient.manageLogging("DELETE", url, successCallback, failCallback);
+	    var callbacks : Array<Function> = RestClient.manageCallbacks("DELETE", url, successCallback, failCallback);
 
-	    RestClient.getClient().delete(url, callbacks[0]).on('error',callbacks[1]);
-    }
-
-    /**
-     * Send a DELETE message to URL in parameter, in a synchronous way.
-     *
-     * @method deleteSync
-     * @static
-     * @param {string} url - The url to patch.
-     */
-    static deleteSync(url : string) : RestClientResponse {
-
-	    var sync : RestClientSync = new RestClientSync();
-	    var callbacks : Array<Function> = RestClient.syncCallbacks(sync);
-
-        RestClient.getClient().delete(url, callbacks[0]).on('error', callbacks[1]);
-
-        while(!sync.done()) {
-            deasync.sleep(5);
-        }
-
-        return sync.result();
+        var req = RestClient.getClient().delete(url, callbacks[0]);
+        req.on('error', callbacks[1]);
+        /*
+         req.on('requestTimeout', callbacks[2]);
+         req.on('responseTimeout', callbacks[3]);
+         */
     }
 
 }

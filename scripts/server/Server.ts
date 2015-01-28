@@ -77,13 +77,59 @@ class Server {
 
         this.app = express();
         this.httpServer = http.createServer(this.app);
-        this.ioServer = sio.listen(this.httpServer);
+        this.ioServer = sio(this.httpServer);
+
+
+        this._listenRootNamespace();
 
         this.app.get('/', function(req, res){
             res.send('<h1>Are you lost ? * &lt;--- You are here !</h1>');
         });
 
         //TODO : io.origins("allowedHosts"); // see : http://socket.io/docs/server-api/#server#origins(v:string):server
+    }
+
+    /**
+     * Listening Root Namespace.
+     *
+     * @method _listenRootNamespace
+     * @private
+     */
+    private _listenRootNamespace() {
+
+        this.ioServer.on('connection', function(socket){
+            Logger.info("New Client Connection for Root namespace : " + socket.id);
+
+            socket.on('disconnect', function(){
+                Logger.info("Client disconnected for Root namespace : " + socket.id);
+            });
+
+            socket.on('error', function(errorData){
+                Logger.info("An error occurred during Client connection for Root namespace : " + socket.id);
+                Logger.debug(errorData);
+            });
+
+            socket.on('reconnect', function(attemptNumber){
+                Logger.info("Client Connection for Root namespace : " + socket.id + " after " + attemptNumber + " attempts.");
+            });
+
+            socket.on('reconnect_attempt', function(){
+                Logger.info("Client reconnect attempt for Root namespace : " + socket.id);
+            });
+
+            socket.on('reconnecting', function(attemptNumber){
+                Logger.info("Client Reconnection for Root namespace : " + socket.id + " - Attempt number " + attemptNumber);
+            });
+
+            socket.on('reconnect_error', function(errorData){
+                Logger.info("An error occurred during Client reconnection for Root namespace : " + socket.id);
+                Logger.debug(errorData);
+            });
+
+            socket.on('reconnect_failed', function(){
+                Logger.info("Failed to reconnect Client for Root namespace : " + socket.id + ". No new attempt will be done.");
+            });
+        });
     }
 
     /**
