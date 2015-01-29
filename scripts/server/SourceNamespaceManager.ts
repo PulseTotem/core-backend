@@ -64,11 +64,11 @@ class SourceNamespaceManager extends NamespaceManager {
         var clientCall = self._sourceServer.retrieveClientCall(clientCallDescription.callHash);
 
         if(clientCall != null) {
-            if(self._sourceServer.getHashForSocketId(self.socket.id) == clientCallDescription.callHash) {
+            //if(self._sourceServer.getHashForSocketId(self.socket.id) == clientCallDescription.callHash) {
                 self.socket.emit("pingAnswer", {"sendingInfos" : true});
-            } else {
+            /*} else {
                 self.socket.emit("pingAnswer", {"sendingInfos" : false});
-            }
+            }*/
         } else {
             //TODO - Manage error...
             Logger.error("ClientCall with hash '" + clientCallDescription.callHash + "' wasn't retrieved...");
