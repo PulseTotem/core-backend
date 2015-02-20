@@ -64,7 +64,7 @@ class Logger {
      */
     static debug(msg) {
 	    if (Logger.level === LoggerLevel.Debug) {
-		    if (Logger.color && msg != null && msg != undefined && typeof(msg.toString()) !== "string") {
+		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
 			    console.log(msg.green);
 		    } else {
 			    console.log(msg);
@@ -81,7 +81,7 @@ class Logger {
      */
     static info(msg) {
 	    if (Logger.level === LoggerLevel.Debug || Logger.level === LoggerLevel.Info) {
-		    if (Logger.color && msg != null && msg != undefined && typeof(msg.toString()) !== "string") {
+		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
 			    console.log(msg.blue);
 		    } else {
 			    console.log(msg);
@@ -98,7 +98,7 @@ class Logger {
      */
     static warn(msg) {
 	    if (Logger.level === LoggerLevel.Debug || Logger.level === LoggerLevel.Info || Logger.level === LoggerLevel.Warning) {
-		    if (Logger.color && msg != null && msg != undefined && typeof(msg.toString()) !== "string") {
+		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
 			    console.log(msg.orange);
 		    } else {
 			    console.log(msg);
@@ -114,7 +114,7 @@ class Logger {
      * @param {string} msg - The message to log.
      */
     static error(msg) {
-        if(Logger.color && msg != null && msg != undefined && typeof(msg.toString()) !== "string") {
+        if(Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
             console.error(msg.red);
         } else {
             console.error(msg);
