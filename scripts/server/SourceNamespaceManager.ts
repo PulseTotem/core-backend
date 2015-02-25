@@ -93,7 +93,7 @@ class SourceNamespaceManager extends NamespaceManager {
 
         if(clientCall != null) {
 
-            self._sourceServer.setHashForSocketId(self.socket.id, clientCallDescription.callHash);
+//            self._sourceServer.setHashForSocketId(self.socket.id, clientCallDescription.callHash);
 
             var callBack = clientCall.getCallCallback();
             callBack(clientCall.getCallParams(), self);
