@@ -235,6 +235,8 @@ class Server {
                 Logger.info("Failed to reconnect Client for namespace '" + namespace + "' : " + socket.id + ". No new attempt will be done.");
             });
         });
+
+        return newNamespace;
     }
 
     /**
