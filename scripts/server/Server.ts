@@ -2,19 +2,17 @@
  * @author Christian Brel <christian@the6thscreen.fr, ch.brel@gmail.com>
  */
 
-/// <reference path="../../libsdef/node.d.ts" />
-/// <reference path="../../libsdef/express.d.ts" />
-/// <reference path="../../libsdef/socket.io-0.9.10.d.ts" />
-
 /// <reference path="../Logger.ts" />
 /// <reference path="../LoggerLevel.ts" />
 
 /// <reference path="./NamespaceManager"/>
 
 
-var http = require("http");
-var express = require("express");
-var sio = require("socket.io");
+var http : any = require("http");
+var express : any = require("express");
+var bodyParser : any = require("body-parser");
+var multer : any = require('multer');
+var sio : any = require("socket.io");
 
 /**
  * Represents a Server managing Namespaces.
@@ -76,6 +74,16 @@ class Server {
         this._argumentsProcess(arguments);
 
         this.app = express();
+        this.app.use(bodyParser.json()); // for parsing application/json
+        this.app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+        this.app.use(multer()); // for parsing multipart/form-data
+
+
+        this.app.use(function(req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });
         this.httpServer = http.createServer(this.app);
         this.ioServer = sio(this.httpServer);
 
@@ -235,6 +243,8 @@ class Server {
                 Logger.info("Failed to reconnect Client for namespace '" + namespace + "' : " + socket.id + ". No new attempt will be done.");
             });
         });
+
+        return newNamespace;
     }
 
     /**
