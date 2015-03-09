@@ -50,4 +50,38 @@ class NamespaceManager {
     onDisconnection() {
         // Nothing to do.
     }
+
+    /**
+     * Format response before emit to SocketIo Socket.
+     *
+     * @method formatResponse
+     * @param {boolean} successStatus - The success status.
+     * @param {any} response - The response
+     */
+    formatResponse(successStatus : boolean, response : any) {
+        return {
+            "success" : successStatus,
+            "response" : response
+        };
+    }
+
+    /**
+     * Method manage response from BackendSocket.
+     *
+     * @method manageServerResponse
+     * @param {any} response - The response from Backend Socket.
+     * @param {Function} successCB - The callback function for success response.
+     * @param {Function} failCB - The callback function for fail response.
+     */
+    manageServerResponse(response : any, successCB : Function, failCB : Function) {
+        if(!!response.success && !!response.response) {
+            if(response.success) {
+                successCB(response.response);
+            } else {
+                failCB(response.response);
+            }
+        } else {
+            failCB(new Error("Backend response is not well formatted."));
+        }
+    }
 }
