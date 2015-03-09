@@ -66,10 +66,10 @@ class NamespaceManager {
     }
 
     /**
-     * Method manage response from BackendSocket.
+     * Method to manage response from Server.
      *
      * @method manageServerResponse
-     * @param {any} response - The response from Backend Socket.
+     * @param {any} response - The response from Server Socket.
      * @param {Function} successCB - The callback function for success response.
      * @param {Function} failCB - The callback function for fail response.
      */
@@ -81,7 +81,7 @@ class NamespaceManager {
                 failCB(response.response);
             }
         } else {
-            failCB(new Error("Backend response is not well formatted."));
+            failCB(new Error("Server response is not well formatted."));
         }
     }
 }
