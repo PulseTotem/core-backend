@@ -6,11 +6,13 @@
 
 /// <reference path="../Logger.ts" />
 
+/// <reference path="../../t6s-core/core/scripts/infotype/Info.ts" />
+
 /// <reference path="./SourceServer.ts" />
 /// <reference path="./NamespaceManager.ts" />
 /// <reference path="./ClientCall.ts" />
 
-var uuid = require('node-uuid');
+var uuid : any = require('node-uuid');
 
 class SourceNamespaceManager extends NamespaceManager {
 
@@ -65,7 +67,7 @@ class SourceNamespaceManager extends NamespaceManager {
 
         if(clientCall != null) {
             //if(self._sourceServer.getHashForSocketId(self.socket.id) == clientCallDescription.callHash) {
-                self.socket.emit("pingAnswer", {"sendingInfos" : true});
+                self.socket.emit("pingAnswer", self.formatResponse(true, {"sendingInfos" : true}));
             /*} else {
                 self.socket.emit("pingAnswer", {"sendingInfos" : false});
             }*/
@@ -118,7 +120,7 @@ class SourceNamespaceManager extends NamespaceManager {
         this.socket.on(listenerName, function(params) {
             Logger.debug("New ClientCall !");
             self._sourceServer.addClientCall(new ClientCall(hash, params, callBackFunction));
-            self.socket.emit("connectionHash", {"hash" : hash});
+            self.socket.emit("connectionHash", self.formatResponse(true, {"hash" : hash}));
         });
     }
 
