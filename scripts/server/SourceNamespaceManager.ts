@@ -13,6 +13,7 @@
 /// <reference path="./ClientCall.ts" />
 
 var uuid : any = require('node-uuid');
+var OAuth : any = require('oauthio');
 
 class SourceNamespaceManager extends NamespaceManager {
 
@@ -144,4 +145,81 @@ class SourceNamespaceManager extends NamespaceManager {
         this._sourceServer.setHashForSocketId(this.socket.id, null);
         this.onDisconnection();
     }
+
+	/**
+	 * Method to manage authentication to services.
+	 *
+	 * @param {string} providerName - The provider's name.
+	 * @param {string} oAuthKey - The User OAuthKey.
+	 * @param {Function} successCB - Callback function when authentication is success
+	 * @param {Function} failCB - Callback function when authentication is fail
+	 */
+	manageOAuth(providerName : string, oAuthKey : string, successCB : Function, failCB : Function) {
+		OAuth.setOAuthdURL("http://oauth.the6thscreen.fr/");
+		OAuth.initialize('VLoeXhqFq66JBj55UFqCMyjz8wk', '7j7FP7vPOnw5wNuhNNkxvoppRpo');
+
+		OAuth.auth(providerName, {}, {
+			credentials: JSON.parse(oAuthKey)
+		})
+		.then(function (request_object) {
+			// request_object contains the access_token if OAuth 2.0
+			// or the couple oauth_token,oauth_token_secret if OAuth 1.0
+			// request_object also contains methods get|post|patch|put|delete|me
+
+			var oauthActions = {
+				get : function (url, successCallback, failCallback) {
+					var getAction : any = request_object.get(url);
+					getAction.then(function(response) {
+						successCallback(response);
+					}).fail(function(err) {
+						failCallback(err);
+					});
+				},
+				post : function (url, data, successCallback, failCallback) {
+					var postAction : any = request_object.post(url, {
+						data: data
+					});
+					postAction.then(function(response) {
+						successCallback(response);
+					}).fail(function(err) {
+						failCallback(err);
+					});
+				},
+				patch : function (url, data, successCallback, failCallback) {
+					var patchAction : any = request_object.patch(url, {
+						data: data
+					});
+					patchAction.then(function(response) {
+						successCallback(response);
+					}).fail(function(err) {
+						failCallback(err);
+					});
+				},
+				put : function (url, data, successCallback, failCallback) {
+					var putAction : any = request_object.put(url, {
+						data: data
+					});
+					putAction.then(function(response) {
+						successCallback(response);
+					}).fail(function(err) {
+						failCallback(err);
+					});
+				},
+				del : function (url, successCallback, failCallback) {
+					var delAction : any = request_object.del(url);
+					delAction.then(function(response) {
+						successCallback(response);
+					}).fail(function(err) {
+						failCallback(err);
+					});
+				}
+			};
+
+			successCB(oauthActions);
+		})
+		.fail(function (e) {
+			//handle errors here
+			failCB(e);
+		});
+	}
 }
