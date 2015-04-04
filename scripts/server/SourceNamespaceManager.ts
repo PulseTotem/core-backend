@@ -164,7 +164,58 @@ class SourceNamespaceManager extends NamespaceManager {
 		.then(function (request_object) {
 			// request_object contains the access_token if OAuth 2.0
 			// or the couple oauth_token,oauth_token_secret if OAuth 1.0
-			successCB(request_object);
+			// request_object also contains methods get|post|patch|put|delete|me
+
+			var oauthActions = {
+				get : function (url, successCallback, failCallback) {
+					var getAction : any = request_object.get(url);
+					getAction.then(function(response) {
+						successCallback(response);
+					}).fail(function(err) {
+						failCallback(err);
+					});
+				},
+				post : function (url, data, successCallback, failCallback) {
+					var postAction : any = request_object.post(url, {
+						data: data
+					});
+					postAction.then(function(response) {
+						successCallback(response);
+					}).fail(function(err) {
+						failCallback(err);
+					});
+				},
+				patch : function (url, data, successCallback, failCallback) {
+					var patchAction : any = request_object.patch(url, {
+						data: data
+					});
+					patchAction.then(function(response) {
+						successCallback(response);
+					}).fail(function(err) {
+						failCallback(err);
+					});
+				},
+				put : function (url, data, successCallback, failCallback) {
+					var putAction : any = request_object.put(url, {
+						data: data
+					});
+					putAction.then(function(response) {
+						successCallback(response);
+					}).fail(function(err) {
+						failCallback(err);
+					});
+				},
+				del : function (url, successCallback, failCallback) {
+					var delAction : any = request_object.del(url);
+					delAction.then(function(response) {
+						successCallback(response);
+					}).fail(function(err) {
+						failCallback(err);
+					});
+				}
+			};
+
+			successCB(oauthActions);
 		})
 		.fail(function (e) {
 			//handle errors here
