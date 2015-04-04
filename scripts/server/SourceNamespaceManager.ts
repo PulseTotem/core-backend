@@ -13,6 +13,7 @@
 /// <reference path="./ClientCall.ts" />
 
 var uuid : any = require('node-uuid');
+var OAuth : any = require('oauthio');
 
 class SourceNamespaceManager extends NamespaceManager {
 
@@ -144,4 +145,30 @@ class SourceNamespaceManager extends NamespaceManager {
         this._sourceServer.setHashForSocketId(this.socket.id, null);
         this.onDisconnection();
     }
+
+	/**
+	 * Method to manage authentication to services.
+	 *
+	 * @param {string} providerName - The provider's name.
+	 * @param {string} oAuthKey - The User OAuthKey.
+	 * @param {Function} successCB - Callback function when authentication is success
+	 * @param {Function} failCB - Callback function when authentication is fail
+	 */
+	manageOAuth(providerName : string, oAuthKey : string, successCB : Function, failCB : Function) {
+		OAuth.setOAuthdURL("http://oauth.the6thscreen.fr/");
+		OAuth.initialize('VLoeXhqFq66JBj55UFqCMyjz8wk', '7j7FP7vPOnw5wNuhNNkxvoppRpo');
+
+		OAuth.auth(providerName, {}, {
+			credentials: JSON.parse(oAuthKey)
+		})
+		.then(function (request_object) {
+			// request_object contains the access_token if OAuth 2.0
+			// or the couple oauth_token,oauth_token_secret if OAuth 1.0
+			successCB(request_object);
+		})
+		.fail(function (e) {
+			//handle errors here
+			failCB(e);
+		});
+	}
 }
