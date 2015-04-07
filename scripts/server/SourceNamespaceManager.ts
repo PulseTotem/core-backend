@@ -26,6 +26,13 @@ class SourceNamespaceManager extends NamespaceManager {
      */
     private _sourceServer : SourceServer;
 
+	/**
+	 * Interval Timer for Push Info to Client in Infinite Mode.
+	 *
+	 * @property intervalTimer
+	 */
+	intervalTimer : any;
+
     /**
      * Constructor.
      *
@@ -34,6 +41,8 @@ class SourceNamespaceManager extends NamespaceManager {
      */
     constructor(socket : any) {
         super(socket);
+
+		this.intervalTimer = null;
 
         super.addListenerToSocket('ping', this.processPing);
         super.addListenerToSocket('newCall', this.processNewCall);
@@ -99,7 +108,12 @@ class SourceNamespaceManager extends NamespaceManager {
 //            self._sourceServer.setHashForSocketId(self.socket.id, clientCallDescription.callHash);
 
             var callBack = clientCall.getCallCallback();
-            callBack(clientCall.getCallParams(), self);
+
+			self.intervalTimer = setInterval(function() {
+				callBack(clientCall.getCallParams(), self);
+			}, 1000*60*2);
+
+
         } else {
             //TODO - Manage error...
             Logger.error("ClientCall with hash '" + clientCallDescription.callHash + "' wasn't retrieved...");
@@ -142,6 +156,10 @@ class SourceNamespaceManager extends NamespaceManager {
      * @method onClientDisconnection
      */
     onClientDisconnection() {
+		if(this.intervalTimer != null) {
+			clearInterval(this.intervalTimer);
+			this.intervalTimer = null;
+		}
         this._sourceServer.setHashForSocketId(this.socket.id, null);
         this.onDisconnection();
     }
