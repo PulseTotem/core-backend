@@ -108,6 +108,7 @@ class SourceNamespaceManager extends NamespaceManager {
 //            self._sourceServer.setHashForSocketId(self.socket.id, clientCallDescription.callHash);
 
             var callBack = clientCall.getCallCallback();
+	        callBack(clientCall.getCallParams(), self);
 
 			self.intervalTimer = setInterval(function() {
 				callBack(clientCall.getCallParams(), self);
