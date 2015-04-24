@@ -2,10 +2,22 @@
  * @author Christian Brel <christian@the6thscreen.fr, ch.brel@gmail.com>
  */
 
-/// <reference path="../libsdef/colors.d.ts" />
 /// <reference path="./LoggerLevel.ts" />
 
-var colors = require('colors');
+var colors : any;
+
+try {
+	colors = require('colors');
+} catch(e) {
+	var returnFunc = function (str) {
+		return str;
+	};
+
+	String.prototype["green"] = returnFunc;
+	String.prototype["blue"] = returnFunc;
+	String.prototype["orange"] = returnFunc;
+	String.prototype["red"] = returnFunc;
+}
 
 /**
  * Represents a logger with a coloration option.
@@ -62,7 +74,7 @@ class Logger {
      * @static
      * @param {string} msg - The message to log.
      */
-    static debug(msg) {
+    static debug(msg : any) {
 	    if (Logger.level === LoggerLevel.Debug) {
 		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
 			    console.log(msg.green);
@@ -79,7 +91,7 @@ class Logger {
      * @static
      * @param {string} msg - The message to log.
      */
-    static info(msg) {
+    static info(msg : any) {
 	    if (Logger.level === LoggerLevel.Debug || Logger.level === LoggerLevel.Info) {
 		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
 			    console.log(msg.blue);
@@ -96,7 +108,7 @@ class Logger {
      * @static
      * @param {string} msg - The message to log.
      */
-    static warn(msg) {
+    static warn(msg : any) {
 	    if (Logger.level === LoggerLevel.Debug || Logger.level === LoggerLevel.Info || Logger.level === LoggerLevel.Warning) {
 		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
 			    console.log(msg.orange);
@@ -113,7 +125,7 @@ class Logger {
      * @static
      * @param {string} msg - The message to log.
      */
-    static error(msg) {
+    static error(msg : any) {
         if(Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
             console.error(msg.red);
         } else {
