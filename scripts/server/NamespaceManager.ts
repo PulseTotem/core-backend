@@ -51,6 +51,17 @@ class NamespaceManager {
         // Nothing to do.
     }
 
+	/**
+	 * Method called when external message come (from API Endpoints for example).
+	 *
+	 * @method onExternalMessage
+	 * @param {string} from - Source description of message
+	 * @param {any} message - Received message
+	 */
+	onExternalMessage(from : string, message : any) {
+		// Nothing to do.
+	}
+
     /**
      * Format response before emit to SocketIo Socket.
      *

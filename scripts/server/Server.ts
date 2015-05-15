@@ -280,4 +280,18 @@ class Server {
     onListen() {
         Logger.info("Server listening on *:" + this.listeningPort);
     }
+
+	/**
+	 * Method called when external message come (from API Endpoints for example)
+	 * and need to be send to all NamespaceManager.
+	 *
+	 * @method broadcastExternalMessage
+	 * @param {string} from - Source description of message
+	 * @param {any} message - Received message
+	 */
+	broadcastExternalMessage(from : string, message : any) {
+		this.namespaceManagers.forEach(function(namespaceManager : NamespaceManager) {
+			namespaceManager.onExternalMessage(from, message);
+		});
+	}
 }
