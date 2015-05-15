@@ -41,7 +41,7 @@ class SourceServer extends Server {
         super(listeningPort, arguments);
         this._clientCalls = new Array<ClientCall>();
         this._mapSocketIdHash = new Array<string>();
-    }
+	}
 
     /**
      * Declare a namespace for server.

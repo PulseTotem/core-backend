@@ -99,6 +99,19 @@ class Server {
         //TODO : io.origins("allowedHosts"); // see : http://socket.io/docs/server-api/#server#origins(v:string):server
     }
 
+	/**
+	 * Add a Server's API endpoint.
+	 *
+	 * @method addAPIEndpoint
+	 * @param {string} endpointName - Tne endpoint name
+	 * @param {Class} routerClass - The Router Class corresponding to endpoint
+	 */
+	addAPIEndpoint(endpointName : string, routerClass : any) {
+		var router = new routerClass();
+		router.setServer(this);
+		this.app.use("/" + endpointName, router.getRouter());
+	}
+
     /**
      * Listening Root Namespace.
      *
