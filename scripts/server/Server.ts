@@ -290,8 +290,9 @@ class Server {
 	 * @param {any} message - Received message
 	 */
 	broadcastExternalMessage(from : string, message : any) {
-		this.namespaceManagers.forEach(function(namespaceManager : NamespaceManager) {
+		for(var iNM in this.namespaceManagers) {
+			var namespaceManager = this.namespaceManagers[iNM];
 			namespaceManager.onExternalMessage(from, message);
-		});
+		}
 	}
 }

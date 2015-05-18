@@ -67,6 +67,32 @@ class SourceServer extends Server {
                 delete(self.namespaceManagers[socket.id]);
                 Logger.info("Client disconnected for namespace '" + namespace + "' : " + socket.id);
             });
+
+			socket.on('error', function(errorData){
+				Logger.info("An error occurred during Client connection for namespace '" + namespace + "' : " + socket.id);
+				Logger.debug(errorData);
+			});
+
+			socket.on('reconnect', function(attemptNumber){
+				Logger.info("Client Connection for namespace '" + namespace + "' : " + socket.id + " after " + attemptNumber + " attempts.");
+			});
+
+			socket.on('reconnect_attempt', function(){
+				Logger.info("Client reconnect attempt for namespace '" + namespace + "' : " + socket.id);
+			});
+
+			socket.on('reconnecting', function(attemptNumber){
+				Logger.info("Client Reconnection for namespace '" + namespace + "' : " + socket.id + " - Attempt number " + attemptNumber);
+			});
+
+			socket.on('reconnect_error', function(errorData){
+				Logger.info("An error occurred during Client reconnection for namespace '" + namespace + "' : " + socket.id);
+				Logger.debug(errorData);
+			});
+
+			socket.on('reconnect_failed', function(){
+				Logger.info("Failed to reconnect Client for namespace '" + namespace + "' : " + socket.id + ". No new attempt will be done.");
+			});
         });
     }
 
