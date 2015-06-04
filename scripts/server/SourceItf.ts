@@ -47,7 +47,7 @@ class SourceItf {
 		return this._params;
 	}
 
-	public getSourceNamespaceManager() : NamespaceManager {
+	public getSourceNamespaceManager() : SourceNamespaceManager {
 		return this._sourceNamespaceManager;
 	}
 
