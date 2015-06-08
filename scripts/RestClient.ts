@@ -9,7 +9,7 @@
 /// <reference path="./RestClientResponse.ts" />
 /// <reference path="./RestClientSync.ts" />
 
-var Client = require('node-rest-client').Client;
+var NodeRestClient = require('node-rest-client').Client;
 
 /**
  * Represents a REST client.
@@ -35,7 +35,7 @@ class RestClient {
      */
     static getClient() {
         if(RestClient.client == null) {
-            RestClient.client = new Client();
+            RestClient.client = new NodeRestClient();
         }
         return RestClient.client;
     }
