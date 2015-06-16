@@ -2,6 +2,8 @@
  * @author Christian Brel <christian@the6thscreen.fr, ch.brel@gmail.com>
  */
 
+/// <reference path="./Server.ts" />
+
 /**
  * Manage socket for a specific namespace.
  *
@@ -18,6 +20,15 @@ class NamespaceManager {
     socket : any;
 
     /**
+     * The server which creates this Namespace
+     *
+     * @property _server
+     * @type Server
+     * @private
+     */
+    private _server : Server;
+
+    /**
      * Constructor.
      *
      * @constructor
@@ -25,6 +36,23 @@ class NamespaceManager {
      */
     constructor(socket : any) {
         this.socket = socket;
+    }
+
+    /**
+     * Return the associated server
+     *
+     * @returns {Server}
+     */
+    public server() {
+        return this._server;
+    }
+
+    /**
+     * Assign a new server to this namespace
+     * @param server
+     */
+    public setServer(server : Server) {
+        this._server = server;
     }
 
     /**
