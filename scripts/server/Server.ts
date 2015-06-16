@@ -224,6 +224,7 @@ class Server {
             Logger.info("New Client Connection for namespace '" + namespace + "' : " + socket.id);
 
             var snm : NamespaceManager = new namespaceManager(socket);
+            snm.setServer(self);
             self.namespaceManagers[socket.id] = snm;
 
             socket.on('disconnect', function(){
@@ -295,4 +296,8 @@ class Server {
 			namespaceManager.onExternalMessage(from, message);
 		}
 	}
+
+    retrieveNamespaceManagerFromSocketId(socketId : string) {
+        return this.namespaceManagers[socketId];
+    }
 }
