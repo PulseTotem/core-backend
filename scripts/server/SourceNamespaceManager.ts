@@ -112,7 +112,7 @@ class SourceNamespaceManager extends NamespaceManager {
 
 			self.intervalTimer = setInterval(function() {
 				callBack(clientCall.getCallParams(), self);
-			}, 1000*60*2);
+			}, clientCall.getCallParams()["refreshTime"]*1000);
 
 
         } else {
