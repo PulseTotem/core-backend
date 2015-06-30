@@ -44,7 +44,6 @@ class SourceNamespaceManager extends NamespaceManager {
 
 		this.intervalTimer = null;
 
-        super.addListenerToSocket('ping', this.processPing);
         super.addListenerToSocket('newCall', this.processNewCall);
     }
 
@@ -57,34 +56,6 @@ class SourceNamespaceManager extends NamespaceManager {
     setServer(server : SourceServer) {
         Logger.debug("Set Source Server.");
         this._sourceServer = server;
-    }
-
-    /**
-     * Process ping.
-     *
-     * @method processPing
-     * @param {Object} clientCallDescription - Client's call description.
-     * @param {SourceNamespaceManager} self - The SourceNamespaceManager's instance.
-     */
-    processPing(clientCallDescription : any, self : SourceNamespaceManager = null) {
-        Logger.debug(clientCallDescription);
-        //clientCallDescription = {"callHash" : string}
-        if(self == null) {
-            self = this;
-        }
-
-        var clientCall = self._sourceServer.retrieveClientCall(clientCallDescription.callHash);
-
-        if(clientCall != null) {
-            //if(self._sourceServer.getHashForSocketId(self.socket.id) == clientCallDescription.callHash) {
-                self.socket.emit("pingAnswer", self.formatResponse(true, {"sendingInfos" : true}));
-            /*} else {
-                self.socket.emit("pingAnswer", {"sendingInfos" : false});
-            }*/
-        } else {
-            //TODO - Manage error...
-            Logger.error("ClientCall with hash '" + clientCallDescription.callHash + "' wasn't retrieved...");
-        }
     }
 
     /**
@@ -104,8 +75,9 @@ class SourceNamespaceManager extends NamespaceManager {
         var clientCall = self._sourceServer.retrieveClientCall(clientCallDescription.callHash);
 
         if(clientCall != null) {
-
 //            self._sourceServer.setHashForSocketId(self.socket.id, clientCallDescription.callHash);
+
+			self.socket.emit("CallOK", self.formatResponse(true, {"hash" : clientCallDescription.callHash}));
 
             var callBack = clientCall.getCallCallback();
 	        callBack(clientCall.getCallParams(), self);
@@ -116,8 +88,8 @@ class SourceNamespaceManager extends NamespaceManager {
 
 
         } else {
-            //TODO - Manage error...
             Logger.error("ClientCall with hash '" + clientCallDescription.callHash + "' wasn't retrieved...");
+			self.socket.emit("CallOK", self.formatResponse(false, {"hash" : clientCallDescription.callHash}));
         }
     }
 
