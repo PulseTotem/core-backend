@@ -116,8 +116,8 @@ class SourceNamespaceManager extends NamespaceManager {
 
 
         } else {
-            //TODO - Manage error...
             Logger.error("ClientCall with hash '" + clientCallDescription.callHash + "' wasn't retrieved...");
+			self.socket.emit("hashNotFound", self.formatResponse(true, {"hash" : clientCallDescription.callHash}));
         }
     }
 
