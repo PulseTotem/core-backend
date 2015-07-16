@@ -300,4 +300,8 @@ class Server {
     retrieveNamespaceManagerFromSocketId(socketId : string) {
         return this.namespaceManagers[socketId];
     }
+
+    serveStaticDirectory(directory : string) {
+        this.app.use("/"+directory, express.static(directory));
+    }
 }
