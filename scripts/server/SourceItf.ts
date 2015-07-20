@@ -32,7 +32,7 @@ class SourceItf {
 		this.setParams(params);
 		this.setSourceNamespaceManager(sourceNamespaceManager);
 
-		this.run();
+		//this.run();
 	}
 
 	public setParams(params : any) {
