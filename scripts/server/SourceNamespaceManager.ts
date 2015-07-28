@@ -27,6 +27,15 @@ class SourceNamespaceManager extends NamespaceManager {
     private _sourceServer : SourceServer;
 
 	/**
+	 * Client Call
+	 *
+	 * @property _clientCall
+	 * @type ClientCall
+	 * @private
+	 */
+	private _clientCall : ClientCall;
+
+	/**
 	 * Interval Timer for Push Info to Client in Infinite Mode.
 	 *
 	 * @property intervalTimer
@@ -72,19 +81,19 @@ class SourceNamespaceManager extends NamespaceManager {
             self = this;
         }
 
-        var clientCall = self._sourceServer.retrieveClientCall(clientCallDescription.callHash);
+        self._clientCall = self._sourceServer.retrieveClientCall(clientCallDescription.callHash);
 
-        if(clientCall != null) {
+        if(self._clientCall != null) {
 //            self._sourceServer.setHashForSocketId(self.socket.id, clientCallDescription.callHash);
 
 			self.socket.emit("CallOK", self.formatResponse(true, {"hash" : clientCallDescription.callHash}));
 
-            var callBack = clientCall.getCallCallback();
-	        callBack(clientCall.getCallParams(), self);
+            var callBack = self._clientCall.getCallCallback();
+	        callBack(self._clientCall.getCallParams(), self);
 
 			self.intervalTimer = setInterval(function() {
-				callBack(clientCall.getCallParams(), self);
-			}, clientCall.getCallParams()["refreshTime"]*1000);
+				callBack(self._clientCall.getCallParams(), self);
+			}, self._clientCall.getCallParams()["refreshTime"]*1000);
 
 
         } else {
@@ -120,7 +129,10 @@ class SourceNamespaceManager extends NamespaceManager {
      */
     sendNewInfoToClient(newInfo : Info) {
         Logger.debug("Send New info.");
-        this.socket.emit("newInfo", newInfo);
+	    newInfo.setServiceLogo(this._clientCall.getCallParams()["serviceLogo"]);
+	    newInfo.setServiceName(this._clientCall.getCallParams()["serviceName"]);
+	    newInfo.propagateServiceInfo();
+	    this.socket.emit("newInfo", newInfo);
     }
 
     /**
