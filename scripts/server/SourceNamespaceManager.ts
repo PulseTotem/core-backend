@@ -131,6 +131,7 @@ class SourceNamespaceManager extends NamespaceManager {
         Logger.debug("Send New info.");
 	    newInfo.setServiceLogo(this._clientCall.getCallParams()["serviceLogo"]);
 	    newInfo.setServiceName(this._clientCall.getCallParams()["serviceName"]);
+	    newInfo.propagateServiceInfo();
 	    this.socket.emit("newInfo", newInfo);
     }
 
