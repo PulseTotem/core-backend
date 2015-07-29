@@ -19,6 +19,8 @@ try {
 	String.prototype["red"] = returnFunc;
 }
 
+var moment : any = require('moment');
+
 /**
  * Represents a logger with a coloration option.
  *
@@ -77,9 +79,9 @@ class Logger {
     static debug(msg : any) {
 	    if (Logger.level === LoggerLevel.Debug) {
 		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
-			    console.log(msg.green);
+			    console.log(moment.format().green+"\t"+msg.green);
 		    } else {
-			    console.log(msg);
+			    console.log(moment.format()+"\t"+msg);
 		    }
 	    }
     }
@@ -94,9 +96,9 @@ class Logger {
     static info(msg : any) {
 	    if (Logger.level === LoggerLevel.Debug || Logger.level === LoggerLevel.Info) {
 		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
-			    console.log(msg.blue);
+			    console.log(moment().format().blue+"\t"+msg.blue);
 		    } else {
-			    console.log(msg);
+			    console.log(moment().format()+"\t"+msg);
 		    }
 	    }
     }
@@ -111,9 +113,9 @@ class Logger {
     static warn(msg : any) {
 	    if (Logger.level === LoggerLevel.Debug || Logger.level === LoggerLevel.Info || Logger.level === LoggerLevel.Warning) {
 		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
-			    console.log(msg.orange);
+			    console.log(moment().format().orange+"\t"+msg.orange);
 		    } else {
-			    console.log(msg);
+			    console.log(moment().format()+"\t"+msg);
 		    }
 	    }
     }
@@ -127,9 +129,9 @@ class Logger {
      */
     static error(msg : any) {
         if(Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
-            console.error(msg.red);
+            console.error(moment().format().red+"\t"+msg.red);
         } else {
-            console.error(msg);
+            console.error(moment().format()+"\t"+msg);
         }
     }
 
