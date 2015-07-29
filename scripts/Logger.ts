@@ -79,9 +79,11 @@ class Logger {
     static debug(msg : any) {
 	    if (Logger.level === LoggerLevel.Debug) {
 		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
-			    console.log(moment.format().green+"\t"+msg.green);
+			    console.log("["+moment().format().green+"]\t"+msg.green);
 		    } else {
-			    console.log(moment.format()+"\t"+msg);
+			    console.log("["+moment().format()+"]\t");
+			    // keep it as it is to display the object
+			    console.log(msg);
 		    }
 	    }
     }
@@ -96,9 +98,11 @@ class Logger {
     static info(msg : any) {
 	    if (Logger.level === LoggerLevel.Debug || Logger.level === LoggerLevel.Info) {
 		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
-			    console.log(moment().format().blue+"\t"+msg.blue);
+			    console.log("["+moment().format().blue+"]\t"+msg.blue);
 		    } else {
-			    console.log(moment().format()+"\t"+msg);
+			    console.log("["+moment().format()+"]\t");
+			    // keep it as it is to display the object
+			    console.log(msg);
 		    }
 	    }
     }
@@ -113,9 +117,11 @@ class Logger {
     static warn(msg : any) {
 	    if (Logger.level === LoggerLevel.Debug || Logger.level === LoggerLevel.Info || Logger.level === LoggerLevel.Warning) {
 		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
-			    console.log(moment().format().orange+"\t"+msg.orange);
+			    console.log("["+moment().format().orange+"]\t"+msg.orange);
 		    } else {
-			    console.log(moment().format()+"\t"+msg);
+			    console.log("["+moment().format()+"]\t");
+			    // keep it as it is to display the object
+			    console.log(msg);
 		    }
 	    }
     }
@@ -129,9 +135,11 @@ class Logger {
      */
     static error(msg : any) {
         if(Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
-            console.error(moment().format().red+"\t"+msg.red);
+            console.error("["+moment().format().red+"]\t"+msg.red);
         } else {
-            console.error(moment().format()+"\t"+msg);
+	        console.log("["+moment().format()+"]\t");
+	        // keep it as it is to display the object
+	        console.log(msg);
         }
     }
 
