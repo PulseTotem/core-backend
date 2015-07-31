@@ -57,6 +57,7 @@ class Server {
 
     /**
      * NamspaceManager list.
+     * Warning: this list is not a proper array as it is used mostly as an object.
      *
      * @property namespaceManagers
      * @type Array<NamespaceManager>
@@ -290,11 +291,14 @@ class Server {
 	 * @param {string} from - Source description of message
 	 * @param {any} message - Received message
 	 */
-	broadcastExternalMessage(from : string, message : any) {
+	broadcastExternalMessage(from : string, message : any) : boolean {
+        var length = 0;
 		for(var iNM in this.namespaceManagers) {
 			var namespaceManager = this.namespaceManagers[iNM];
 			namespaceManager.onExternalMessage(from, message);
+            length++;
 		}
+        return (length > 0);
 	}
 
     retrieveNamespaceManagerFromSocketId(socketId : string) {
