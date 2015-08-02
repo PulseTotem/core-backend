@@ -67,6 +67,12 @@ module.exports = function (grunt) {
         },
 
         typescript: {
+            build: {
+                src: [
+                    'scripts/**/*.ts'
+                ],
+                dest: 'build/js/CoreBackend.js'
+            },
             test: {
                 src: [
                     'tests/**/*.ts'
@@ -151,9 +157,9 @@ module.exports = function (grunt) {
     grunt.registerTask('doc', ['clean:doc', 'yuidoc']);
 
     grunt.registerTask('initTest', function() {
-        grunt.task.run(['clean:package', 'clean:test']);
+        grunt.task.run(['clean:build']);
 
-        grunt.task.run(['update_json:packageBuild', 'copy:buildPackageBak', 'copy:buildPackageReplace', 'npm-install', 'copy:buildPackageReinit', 'typescript:test']);
+        grunt.task.run(['update_json:packageBuild', 'copy:buildPackageBak', 'copy:buildPackageReplace', 'npm-install', 'copy:buildPackageReinit', 'typescript:build', 'typescript:test']);
     });
 
 
