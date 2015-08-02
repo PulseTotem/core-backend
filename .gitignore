@@ -1,3 +1,7 @@
 .idea
 node_modules
 t6s-core/*
+build
+core-repos-config.json
+package-bak.json
+package-tmp.json
