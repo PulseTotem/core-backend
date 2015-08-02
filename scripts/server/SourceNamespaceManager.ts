@@ -4,7 +4,7 @@
 
 /// <reference path="../../libsdef/node-uuid.d.ts" />
 
-/// <reference path="../Logger.ts" />
+/// <reference path="../../t6s-core/core/scripts/logger/Logger.ts" />
 
 /// <reference path="../../t6s-core/core/scripts/infotype/Info.ts" />
 

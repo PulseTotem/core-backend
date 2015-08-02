@@ -3,7 +3,7 @@
  */
 
 /// <reference path="./SourceNamespaceManager.ts" />
-/// <reference path="../Logger.ts" />
+/// <reference path="../../t6s-core/core/scripts/logger/Logger.ts" />
 
 /**
  * A SourceItf describes a Source to call inside a service.

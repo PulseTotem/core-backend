@@ -5,7 +5,7 @@
 
 /// <reference path="../libsdef/node-rest-client.d.ts" />
 
-/// <reference path="./Logger.ts" />
+/// <reference path="../t6s-core/core/scripts/logger/Logger.ts" />
 /// <reference path="./RestClientResponse.ts" />
 /// <reference path="./RestClientSync.ts" />
 
