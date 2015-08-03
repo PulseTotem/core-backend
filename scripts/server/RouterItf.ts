@@ -2,7 +2,7 @@
  * @author Christian Brel <ch.brel@gmail.com>
  */
 
-/// <reference path="../../t6s-core/core/scripts/logger/Logger.ts" />
+/// <reference path="../Logger.ts" />
 
 var express : any = require("express");
 

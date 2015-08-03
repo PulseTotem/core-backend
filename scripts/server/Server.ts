@@ -2,7 +2,7 @@
  * @author Christian Brel <christian@the6thscreen.fr, ch.brel@gmail.com>
  */
 
-/// <reference path="../../t6s-core/core/scripts/logger/Logger.ts" />
+/// <reference path="../Logger.ts" />
 
 /// <reference path="./NamespaceManager"/>
 
