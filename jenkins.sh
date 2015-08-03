@@ -7,6 +7,6 @@ then
 fi
 
 npm install
-echo '{ "coreRepoPath" : "$1" }' > core-repos-config.json
+echo '{ "coreRepoPath" : "'$1'" }' > core-repos-config.json
 grunt init
 grunt jenkins
