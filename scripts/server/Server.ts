@@ -201,9 +201,11 @@ class Server {
     run() {
         var self = this;
 
-        this.httpServer.listen(this.listeningPort, function() {
-            self.onListen();
-        });
+        if (process.env.NODE_ENV != "test") {
+            this.httpServer.listen(this.listeningPort, function() {
+                self.onListen();
+            });
+        }
     }
 
     /**
