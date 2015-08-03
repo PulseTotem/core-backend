@@ -151,7 +151,7 @@ module.exports = function (grunt) {
 // ---------------------------------------------
     });
 
-    grunt.registerTask('default', ['test']);
+    grunt.registerTask('default', ['coverage']);
     grunt.registerTask('init', ['symlink']);
 
     grunt.registerTask('doc', ['clean:doc', 'yuidoc']);
