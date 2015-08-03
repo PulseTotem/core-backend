@@ -98,7 +98,7 @@ class Logger {
     static info(msg : any) {
 	    if (Logger.level === LoggerLevel.Debug || Logger.level === LoggerLevel.Info) {
 		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
-			    console.log("["+moment().format().blue+"]\t"+msg.blue);
+			    console.log("["+moment().format().blue+"] \t"+msg.blue);
 		    } else {
 			    console.log("["+moment().format()+"]\t");
 			    // keep it as it is to display the object
