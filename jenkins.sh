@@ -6,7 +6,12 @@ then
   exit 1
 fi
 
+currentDir=`pwd`
+cd $1
+absolutePathCore=`pwd`
+cd $currentDir
+
 npm install
-echo '{ "coreRepoPath" : "'$1'" }' > core-repos-config.json
+echo '{ "coreRepoPath": "'$absolutePathCore'" }' > core-repos-config.json
 grunt init
 grunt jenkins

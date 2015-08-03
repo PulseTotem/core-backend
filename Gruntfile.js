@@ -24,7 +24,7 @@ module.exports = function (grunt) {
         symlink: {
             // Enable overwrite to delete symlinks before recreating them
             options: {
-                overwrite: false
+                overwrite: true
             },
             // The "build/target.txt" symlink will be created and linked to
             // "source/target.txt". It should appear like this in a file listing:
