@@ -2,10 +2,7 @@
  * @author Christian Brel <christian@the6thscreen.fr, ch.brel@gmail.com>
  */
 
-/// <reference path="../../libsdef/node.d.ts" />
-
 /// <reference path="../Logger.ts" />
-/// <reference path="../LoggerLevel.ts" />
 
 /// <reference path="./NamespaceManager"/>
 
@@ -204,9 +201,11 @@ class Server {
     run() {
         var self = this;
 
-        this.httpServer.listen(this.listeningPort, function() {
-            self.onListen();
-        });
+        if (process.env.NODE_ENV != "test") {
+            this.httpServer.listen(this.listeningPort, function() {
+                self.onListen();
+            });
+        }
     }
 
     /**

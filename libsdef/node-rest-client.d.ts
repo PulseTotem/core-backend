@@ -1,5 +1,3 @@
-///<reference path='node.d.ts' />
-
 declare module "node-rest-client" {
     export function Client() : ClientObject;
 }
