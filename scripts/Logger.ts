@@ -1,7 +1,7 @@
 /**
  * @author Christian Brel <christian@the6thscreen.fr, ch.brel@gmail.com>
  */
-/// <reference path="../../libsdef/node.d.ts" />
+/// <reference path="../t6s-core/core/libsdef/node.d.ts" />
 /// <reference path="./LoggerLevel.ts" />
 
 var colors : any;
