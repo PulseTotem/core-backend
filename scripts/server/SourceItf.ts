@@ -55,12 +55,14 @@ class SourceItf {
 		Logger.error("The method run() should be implemented.");
 	}
 
-	public checkParams(paramNames : Array<string>) {
-		var self = this;
-		paramNames.forEach(function (paramName) {
-			if (self._params[paramName] == undefined) {
-				throw "ParameterError : the following parameter is undefined : "+paramName;
+	public checkParams(paramNames : Array<string>) : boolean {
+		for (var i = 0; i < paramNames.length; i++) {
+			var paramName = paramNames[i];
+			if (this._params[paramName] == undefined) {
+				Logger.error("ParameterError : the following parameter is undefined : "+paramName);
+				return false;
 			}
-		});
+		}
+		return true;
 	}
 }
