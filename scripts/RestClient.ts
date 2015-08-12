@@ -98,12 +98,14 @@ class RestClient {
     static get(url : string, successCallback : Function = null, failCallback : Function = null) {
         var callbacks : Array<Function> = RestClient.manageCallbacks("GET", url, successCallback, failCallback);
 
-        var req = RestClient.getClient().get(url, callbacks[0]);
+        var req = RestClient.getClient().get(url, function(data, response) {
+			if(response.statusCode >= 200 && response.statusCode < 300) {
+				callbacks[0](data, response);
+			} else {
+				callbacks[1](data, response);
+			}
+		});
         req.on('error', callbacks[1]);
-        /*
-        req.on('requestTimeout', callbacks[2]);
-        req.on('responseTimeout', callbacks[3]);
-        */
     }
 
     /**
@@ -126,18 +128,14 @@ class RestClient {
         var args = RestClient.createArgs(data);
 
 		var req = RestClient.getClient().post(url, args, function(data, response) {
-			Logger.setLevel(LoggerLevel.Debug);
-			Logger.debug(response.statusCode);
-			//TODO: Check StatusCode.
-			callbacks[0](data, response);
+			if(response.statusCode >= 200 && response.statusCode < 300) {
+				callbacks[0](data, response);
+			} else {
+				callbacks[1](data, response);
+			}
 		});
         //var req = RestClient.getClient().post(url, args, callbacks[0]);
         req.on('error', callbacks[1]);
-        /*
-         req.on('requestTimeout', callbacks[2]);
-         req.on('responseTimeout', callbacks[3]);
-         */
-
     }
 
     /**
@@ -159,12 +157,14 @@ class RestClient {
 
         var args = RestClient.createArgs(data);
 
-        var req = RestClient.getClient().put(url, args, callbacks[0]);
+        var req = RestClient.getClient().put(url, args, function(data, response) {
+			if(response.statusCode >= 200 && response.statusCode < 300) {
+				callbacks[0](data, response);
+			} else {
+				callbacks[1](data, response);
+			}
+		});
         req.on('error', callbacks[1]);
-        /*
-         req.on('requestTimeout', callbacks[2]);
-         req.on('responseTimeout', callbacks[3]);
-         */
     }
 
     /**
@@ -186,12 +186,14 @@ class RestClient {
 
         var args = RestClient.createArgs(data);
 
-        var req = RestClient.getClient().patch(url, args, callbacks[0]);
+        var req = RestClient.getClient().patch(url, args, function(data, response) {
+			if(response.statusCode >= 200 && response.statusCode < 300) {
+				callbacks[0](data, response);
+			} else {
+				callbacks[1](data, response);
+			}
+		});
         req.on('error', callbacks[1]);
-        /*
-         req.on('requestTimeout', callbacks[2]);
-         req.on('responseTimeout', callbacks[3]);
-         */
     }
 
     /**
@@ -206,12 +208,14 @@ class RestClient {
     static delete(url : string, successCallback : Function = null, failCallback : Function = null) {
 	    var callbacks : Array<Function> = RestClient.manageCallbacks("DELETE", url, successCallback, failCallback);
 
-        var req = RestClient.getClient().delete(url, callbacks[0]);
+        var req = RestClient.getClient().delete(url, function(data, response) {
+			if(response.statusCode >= 200 && response.statusCode < 300) {
+				callbacks[0](data, response);
+			} else {
+				callbacks[1](data, response);
+			}
+		});
         req.on('error', callbacks[1]);
-        /*
-         req.on('requestTimeout', callbacks[2]);
-         req.on('responseTimeout', callbacks[3]);
-         */
     }
 
 }
