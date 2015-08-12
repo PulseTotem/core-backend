@@ -63,7 +63,7 @@ class RestClient {
         }
 
         var returnSuccess : Function = function(data, response) {
-            var result : RestClientResponse = new RestClientResponse(true, response, JSON.parse(data));
+			var result : RestClientResponse = new RestClientResponse(true, response, JSON.parse(data));
             success(result);
         };
 
@@ -125,7 +125,13 @@ class RestClient {
 
         var args = RestClient.createArgs(data);
 
-        var req = RestClient.getClient().post(url, args, callbacks[0]);
+		var req = RestClient.getClient().post(url, args, function(data, response) {
+			Logger.setLevel(LoggerLevel.Debug);
+			Logger.debug(response.statusCode);
+			//TODO: Check StatusCode.
+			callbacks[0](data, response);
+		});
+        //var req = RestClient.getClient().post(url, args, callbacks[0]);
         req.on('error', callbacks[1]);
         /*
          req.on('requestTimeout', callbacks[2]);
