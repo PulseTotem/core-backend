@@ -1,8 +1,7 @@
 /**
  * @author Simon Urli <simon@the6thscreen.fr>
+ * @author Christian Brel <christian@the6thscreen.fr, ch.brel@gmail.com>
  */
-
-/// <reference path="../libsdef/sequelize-restful.d.ts" />
 
 /**
  * Represent a response of a request made using RestClient class.
@@ -35,7 +34,7 @@ class RestClientResponse {
 	 * @property _data
 	 * @type {any}
 	 */
-	private _data : SequelizeRestfulResponse;
+	private _data : any;
 
 	/**
 	 * Get the statusCode from the request
