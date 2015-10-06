@@ -300,8 +300,19 @@ class Server {
         return (length > 0);
 	}
 
+	/**
+	 * Search NamespaceManager corresponding to socket's id in param.
+	 *
+	 * @method retrieveNamespaceManagerFromSocketId
+	 * @param {string} socketId - The socket's id attached to NamespaceManager
+	 * @returns null if not found, NamespaceManager if found
+	 */
     retrieveNamespaceManagerFromSocketId(socketId : string) {
-        return this.namespaceManagers[socketId];
+		if(typeof(this.namespaceManagers[socketId]) == "undefined") {
+			return null;
+		} else {
+			return this.namespaceManagers[socketId];
+		}
     }
 
     serveStaticDirectory(directory : string) {
