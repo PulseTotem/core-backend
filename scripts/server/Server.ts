@@ -308,6 +308,9 @@ class Server {
 	 * @returns null if not found, NamespaceManager if found
 	 */
     retrieveNamespaceManagerFromSocketId(socketId : string) {
+		Logger.debug("Server - retrieveNamespaceManagerFromSocketId");
+		Logger.debug(this.namespaceManagers);
+		Logger.debug(socketId);
 		if(typeof(this.namespaceManagers[socketId]) == "undefined") {
 			return null;
 		} else {
