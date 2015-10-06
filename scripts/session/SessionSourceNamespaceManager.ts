@@ -3,6 +3,8 @@
  */
 
 /// <reference path="../server/SourceNamespaceManager.ts" />
+/// <reference path="./SessionNamespaceManagerItf.ts" />
+/// <reference path="./SessionManager.ts" />
 
 /**
  * Represents the PulseTotem SessionSourceNamespaceManager : a SourceNamespaceManager managing Session.
