@@ -5,10 +5,13 @@
 /**
  * Represents the possible status of a Session.
  *
- * @enum SessionStatus
+ * @class SessionStatus
  */
-enum SessionStatus {
-	WAITING,
-	ACTIVE,
-	FINISHED
+class SessionStatus {
+
+	static WAITING : string = "WAITING";
+
+	static ACTIVE : string = "ACTIVE";
+
+	static FINISHED : string = "FINISHED";
 }

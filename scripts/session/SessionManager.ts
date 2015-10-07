@@ -30,6 +30,16 @@ class SessionManager {
 	private _sessions : Array<Session>;
 
 	/**
+	 * NamespaceManagers attached to each Session.
+	 *
+	 * /!\ This is not a real Array... It's considered as an Object cause we use string indexation. /!\
+	 *
+	 * @property _attachedNamespaces
+	 * @type Array<NamespaceManager>
+	 */
+	private _attachedNamespaces : Array<NamespaceManager>;
+
+	/**
 	 * SessionManager's active session.
 	 *
 	 * @property _activeSession
@@ -46,6 +56,7 @@ class SessionManager {
 	constructor(sessionSourceNM : SessionSourceNamespaceManager) {
 		this._sessionSourceNM = sessionSourceNM;
 		this._sessions = new Array<Session>();
+		this._attachedNamespaces = new Array<NamespaceManager>();
 		this._activeSession = null;
 	}
 
@@ -55,14 +66,37 @@ class SessionManager {
 	 * @method _addSession
 	 * @private
 	 * @param {Session} newSession - Session to add.
+	 * @param {NamespaceManager} attachedNamespace - NamespaceManager to attach to Session.
 	 */
-	private _addSession(newSession : Session) {
+	private _addSession(newSession : Session, attachedNamespace : NamespaceManager) {
+
+		this._attachedNamespaces[newSession.id()] = attachedNamespace;
+
 		if(this._activeSession == null) {
-			newSession.activate();
-			this._activeSession = newSession;
+			this._activateSession(newSession);
 		} else {
 			this._sessions.push(newSession);
 		}
+	}
+
+	/**
+	 * Activate the session in param.
+	 *
+	 * @method _activateSession
+	 * @private
+	 * @param {Session} session - Session to activate.
+	 */
+	private _activateSession(session : Session) {
+		session.activate();
+		this._activeSession = session;
+
+		if(typeof(this._attachedNamespaces[this._activeSession.id()]) != "undefined") {
+			this._attachedNamespaces[this._activeSession.id()].lockControl(this._activeSession);
+			this._sessionSourceNM.lockControl(this._activeSession);
+		} /* else { // TODO : ERROR !!!!!
+
+		}*/
+
 	}
 
 	/**
@@ -74,7 +108,7 @@ class SessionManager {
 	newSession(enquirerNamespace : NamespaceManager) {
 		var newSession : Session = new Session();
 
-		this._addSession(newSession);
+		this._addSession(newSession, enquirerNamespace);
 
 		return newSession;
 	}

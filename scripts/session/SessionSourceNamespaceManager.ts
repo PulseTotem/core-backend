@@ -53,4 +53,16 @@ class SessionSourceNamespaceManager extends SourceNamespaceManager implements Se
 	newSession(enquirerNamespace : NamespaceManager) {
 		return this._sessionManager.newSession(enquirerNamespace);
 	}
+
+	/**
+	 * Lock the control of the Screen for the Session in param.
+	 *
+	 * @method lockControl
+	 * @param {Session} session - Session which takes the control of the Screen.
+	 */
+	lockControl(session : Session) {
+		var self = this;
+
+		self.socket.emit("LockedControl", session);
+	}
 }
