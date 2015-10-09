@@ -45,6 +45,15 @@ class SessionSourceNamespaceManager extends SourceNamespaceManager implements Se
 	}
 
 	/**
+	 * Return SessionManager.
+	 *
+	 * @method getSessionManager
+	 */
+	getSessionManager() {
+		return this._sessionManager;
+	}
+
+	/**
 	 * Creation a new Session for the NamespaceManager who ask it.
 	 *
 	 * @method newSession

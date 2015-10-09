@@ -61,6 +61,15 @@ class SessionManager {
 	}
 
 	/**
+	 * Return Active Session.
+	 *
+	 * @method getActiveSession
+	 */
+	getActiveSession() {
+		return this._activeSession;
+	}
+
+	/**
 	 * Add a session to this SessionManager. If there is no active session, it actives the new one.
 	 *
 	 * @method _addSession
