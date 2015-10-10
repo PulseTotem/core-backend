@@ -67,4 +67,13 @@ class Session {
 	activate() {
 		this._status = SessionStatus.ACTIVE;
 	}
+
+	/**
+	 * Finish this session (change status to FINISHED).
+	 *
+	 * @method finish
+	 */
+	finish() {
+		this._status = SessionStatus.FINISHED;
+	}
 }

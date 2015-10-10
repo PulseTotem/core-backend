@@ -17,4 +17,12 @@ interface SessionNamespaceManagerItf {
 	 * @param {Session} session - Session which takes the control of the Screen.
 	 */
 	lockControl(session : Session);
+
+	/**
+	 * Unlock the control of the Screen for the Session in param.
+	 *
+	 * @method unlockControl
+	 * @param {Session} session - Session which takes the control of the Screen.
+	 */
+	unlockControl(session : Session);
 }

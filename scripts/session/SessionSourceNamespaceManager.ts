@@ -74,4 +74,16 @@ class SessionSourceNamespaceManager extends SourceNamespaceManager implements Se
 
 		self.socket.emit("LockedControl", session);
 	}
+
+	/**
+	 * Unlock the control of the Screen for the Session in param.
+	 *
+	 * @method unlockControl
+	 * @param {Session} session - Session which takes the control of the Screen.
+	 */
+	unlockControl(session : Session) {
+		var self = this;
+
+		self.socket.emit("UnlockedControl", session);
+	}
 }

@@ -109,6 +109,21 @@ class SessionManager {
 	}
 
 	/**
+	 * Active next session in list.
+	 *
+	 * @method _activeNextSession
+	 * @private
+	 */
+	private _activeNextSession() {
+		if(this._activeSession == null) {
+			if(this._sessions.length > 0) {
+				var newSession = this._sessions.shift();
+				this._activateSession(newSession);
+			}
+		}
+	}
+
+	/**
 	 * Creation a new Session for the NamespaceManager who ask it.
 	 *
 	 * @method newSession
@@ -120,5 +135,24 @@ class SessionManager {
 		this._addSession(newSession, enquirerNamespace);
 
 		return newSession;
+	}
+
+	/**
+	 * Finish active session and go to next.
+	 *
+	 * @method finishActiveSession
+	 */
+	finishActiveSession() {
+		if(typeof(this._attachedNamespaces[this._activeSession.id()]) != "undefined") {
+			this._activeSession.finish();
+			this._attachedNamespaces[this._activeSession.id()].unlockControl(this._activeSession);
+			this._sessionSourceNM.unlockControl(this._activeSession);
+		} /* else { // TODO : ERROR !!!!!
+
+		 }*/
+
+		this._activeSession = null;
+
+		this._activeNextSession();
 	}
 }
