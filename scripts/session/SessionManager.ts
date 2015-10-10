@@ -143,15 +143,18 @@ class SessionManager {
 	 * @method finishActiveSession
 	 */
 	finishActiveSession() {
-		if(typeof(this._attachedNamespaces[this._activeSession.id()]) != "undefined") {
-			this._activeSession.finish();
-			this._attachedNamespaces[this._activeSession.id()].unlockControl(this._activeSession);
-			this._sessionSourceNM.unlockControl(this._activeSession);
-		} /* else { // TODO : ERROR !!!!!
+		if(this._activeSession !=  null) {
+			if (typeof(this._attachedNamespaces[this._activeSession.id()]) != "undefined") {
+				this._activeSession.finish();
+				this._attachedNamespaces[this._activeSession.id()].unlockControl(this._activeSession);
+				this._sessionSourceNM.unlockControl(this._activeSession);
+			}
+			/* else { // TODO : ERROR !!!!!
 
-		 }*/
+			 }*/
 
-		this._activeSession = null;
+			this._activeSession = null;
+		}
 
 		this._activeNextSession();
 	}
