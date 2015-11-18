@@ -70,6 +70,16 @@ class SessionManager {
 	}
 
 	/**
+	 * Return an attached namespace given a session ID
+	 *
+	 * @method getAttachedNamespace
+	 * @param sessionId
+	 */
+	getAttachedNamespace(sessionId : string) : NamespaceManager {
+		return this._attachedNamespaces[sessionId];
+	}
+
+	/**
 	 * Add a session to this SessionManager. If there is no active session, it actives the new one.
 	 *
 	 * @method _addSession
