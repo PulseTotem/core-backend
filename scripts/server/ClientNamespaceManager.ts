@@ -22,7 +22,7 @@ class ClientNamespaceManager extends NamespaceManager implements SessionNamespac
 	 * @property _callNamespaceManager
 	 * @type NamespaceManager
 	 */
-	private _callNamespaceManager:SessionSourceNamespaceManager;
+	private _callNamespaceManager: SessionSourceNamespaceManager;
 
 	private _timeoutDuration : number;
 
@@ -37,7 +37,13 @@ class ClientNamespaceManager extends NamespaceManager implements SessionNamespac
 	constructor(socket:any) {
 		super(socket);
 
-		super.addListenerToSocket('TakeControl', function (callSocketId:any, self:PhotoboxClientNamespaceManager) {
+		this._callNamespaceManager = null;
+		this._timeoutDuration = null;
+		this._timeoutId = null;
+
+		var self = this;
+
+		super.addListenerToSocket('TakeControl', function (callSocketId:any, self:ClientNamespaceManager) {
 			self.takeControl(callSocketId);
 		});
 	}
@@ -69,10 +75,36 @@ class ClientNamespaceManager extends NamespaceManager implements SessionNamespac
 			}
 
 			self.socket.emit("ControlSession", self.formatResponse(true, newSession));
+			self.resetTimeout();
 		}
 	}
 
-	private prepareTimeout() {
+	/**
+	 * Add a listener to socket but set the timeout before calling callback.
+	 * Moreover it checks if the callNamespaceManager is set, else it just leave logging an error.
+	 *
+	 * @method addListenerToSocket
+	 * @param {string} listenerName - The listener name.
+	 * @param {Function} callBackFunction - The callback function for listener.
+	 */
+	addListenerToSocket(listenerName : string, callBackFunction : Function) {
+		var self = this;
+
+		this.socket.on(listenerName, function(content) {
+			if (self._callNamespaceManager != null) {
+				self.resetTimeout();
+				callBackFunction(content, self);
+			} else {
+				Logger.error("Can't call callback for "+listenerName+" because the callNamespaceManager is not set yet.");
+			}
+		});
+	}
+
+	public getCallNamespaceManager() : SourceNamespaceManager {
+		return this._callNamespaceManager;
+	}
+
+	public resetTimeout() {
 		var self = this;
 
 		if (self._timeoutId != null) {
