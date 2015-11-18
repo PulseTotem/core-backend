@@ -42,6 +42,14 @@ class SourceNamespaceManager extends NamespaceManager {
 	 */
 	intervalTimer : any;
 
+	/**
+	 * The params used by the source call
+	 *
+	 * @property _params
+	 * @type any
+	 */
+	private _params : any;
+
     /**
      * Constructor.
      *
@@ -67,7 +75,40 @@ class SourceNamespaceManager extends NamespaceManager {
         this._sourceServer = server;
     }
 
-    /**
+	/**
+	 * Set the params of the call
+	 * @param params
+	 */
+	public setParams(params : any) {
+		this._params = params;
+	}
+
+	/**
+	 * Get params of the call
+	 * @returns {any}
+	 */
+	public getParams() : any {
+		return this._params;
+	}
+
+	/**
+	 * Check validity of the parameters given the mandatory param keys
+	 * @param paramNames List of mandatory param keys
+	 * @returns {boolean} Return false if one parameter is not defined. True if all param keys are found.
+	 */
+	public checkParams(paramNames : Array<string>) : boolean {
+		for (var i = 0; i < paramNames.length; i++) {
+			var paramName = paramNames[i];
+			if (this._params[paramName] == undefined) {
+				Logger.error("ParameterError : the following parameter is undefined : "+paramName);
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	/**
      * Process new Call connection.
      *
      * @method processNewCall
@@ -87,6 +128,8 @@ class SourceNamespaceManager extends NamespaceManager {
 //            self._sourceServer.setHashForSocketId(self.socket.id, clientCallDescription.callHash);
 
 			self.socket.emit("CallOK", self.formatResponse(true, {"hash" : clientCallDescription.callHash}));
+
+	        self.setParams(self._clientCall.getCallParams());
 
             var callBack = self._clientCall.getCallCallback();
 	        callBack(self._clientCall.getCallParams(), self);
