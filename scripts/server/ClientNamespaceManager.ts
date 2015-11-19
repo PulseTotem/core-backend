@@ -112,7 +112,7 @@ class ClientNamespaceManager extends NamespaceManager implements SessionNamespac
 		}
 
 		var functionTimeout = function () {
-			self.socket.disconnect();
+			self.unlockControl(self._callNamespaceManager.getSessionManager().getActiveSession());
 		};
 
 		self._timeoutId = setTimeout(functionTimeout, self._timeoutDuration*1000);
