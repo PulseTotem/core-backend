@@ -113,14 +113,14 @@ class NamespaceManager {
      * @param {Function} failCB - The callback function for fail response.
      */
     manageServerResponse(response : any, successCB : Function, failCB : Function) {
-        if(!!response.success && !!response.response) {
-            if(response.success) {
-                successCB(response.response);
-            } else {
-                failCB(response.response);
-            }
-        } else {
-            failCB(new Error("Server response is not well formatted."));
-        }
+		if(typeof(response.success) != "undefined" && response.success != null && typeof(response.response) != "undefined" && response.response != null) {
+			if(response.success == true) {
+				successCB(response.response);
+			} else {
+				failCB(response.response);
+			}
+		} else {
+			failCB(new Error("Server response is not well formatted."));
+		}
     }
 }
