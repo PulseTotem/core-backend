@@ -16,6 +16,7 @@
  */
 class ClientNamespaceManager extends NamespaceManager implements SessionNamespaceManagerItf {
 
+	private static _TIMEOUT_DURATION : number = 30;
 	/**
 	 * Call NamespaceManager.
 	 *
@@ -71,7 +72,7 @@ class ClientNamespaceManager extends NamespaceManager implements SessionNamespac
 			if (paramTimeoutDuration != undefined) {
 				self._timeoutDuration = parseInt(paramTimeoutDuration);
 			} else {
-				self._timeoutDuration = 30;
+				self._timeoutDuration = ClientNamespaceManager._TIMEOUT_DURATION;
 			}
 
 			self.socket.emit("ControlSession", self.formatResponse(true, newSession));
@@ -112,7 +113,7 @@ class ClientNamespaceManager extends NamespaceManager implements SessionNamespac
 		}
 
 		var functionTimeout = function () {
-			self.unlockControl(self._callNamespaceManager.getSessionManager().getActiveSession());
+			self._callNamespaceManager.getSessionManager().finishActiveSession();
 		};
 
 		self._timeoutId = setTimeout(functionTimeout, self._timeoutDuration*1000);
