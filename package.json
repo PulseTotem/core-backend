@@ -25,7 +25,7 @@
     "body-parser": "1.12.4",
     "multer": "0.1.8",
     "datejs": "1.0.0-rc3",
-    "oauthio": "0.3.1",
+    "oauthio": "0.3.3",
     "moment": "2.10.6",
     "colors": "0.6.2"
   }
