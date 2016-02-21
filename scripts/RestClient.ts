@@ -64,7 +64,7 @@ class RestClient {
 
         var returnSuccess : Function = function(data, response) {
 			var dataJSON;
-			if(data instanceof Array) {
+			if(typeof(data) == "object") {
 				dataJSON = data;
 			} else {
 				dataJSON = JSON.parse(data);
