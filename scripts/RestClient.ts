@@ -63,7 +63,13 @@ class RestClient {
         }
 
         var returnSuccess : Function = function(data, response) {
-			var result : RestClientResponse = new RestClientResponse(true, response, data);
+			var dataJSON;
+			if(data instanceof Array) {
+				dataJSON = data;
+			} else {
+				dataJSON = JSON.parse(data);
+			}
+			var result : RestClientResponse = new RestClientResponse(true, response, dataJSON);
             success(result);
         };
 
