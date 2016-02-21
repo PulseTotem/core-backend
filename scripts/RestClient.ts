@@ -63,7 +63,13 @@ class RestClient {
         }
 
         var returnSuccess : Function = function(data, response) {
-			var result : RestClientResponse = new RestClientResponse(true, response, JSON.parse(data));
+			var dataJSON;
+			if(data instanceof Array) {
+				dataJSON = data;
+			} else {
+				dataJSON = JSON.parse(data);
+			}
+			var result : RestClientResponse = new RestClientResponse(true, response, dataJSON);
             success(result);
         };
 
@@ -208,7 +214,9 @@ class RestClient {
     static delete(url : string, successCallback : Function = null, failCallback : Function = null) {
 	    var callbacks : Array<Function> = RestClient.manageCallbacks("DELETE", url, successCallback, failCallback);
 
-        var req = RestClient.getClient().delete(url, function(data, response) {
+		var args = RestClient.createArgs("");
+
+        var req = RestClient.getClient().delete(url, args, function(data, response) {
 			if(response.statusCode >= 200 && response.statusCode < 300) {
 				callbacks[0](data, response);
 			} else {

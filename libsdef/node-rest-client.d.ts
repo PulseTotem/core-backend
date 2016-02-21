@@ -7,7 +7,7 @@ interface ClientObject {
     post(url : string, args : any, fn: Function) : RequestObject;
     put(url : string, args : any, fn: Function) : RequestObject;
     patch(url : string, args : any, fn: Function) : RequestObject;
-    delete(url : string, fn: Function) : RequestObject;
+    delete(url : string, args : any, fn: Function) : RequestObject;
 }
 
 interface RequestObject {
