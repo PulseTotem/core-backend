@@ -201,6 +201,15 @@ class Server {
     run() {
         var self = this;
 
+        //Define errorHandler function.
+        this.app.use(function(err, req, res, next) {
+            if (res.headersSent) {
+                return next(err);
+            }
+            res.status(500).send({ 'error': err.message });
+            Logger.debug(err);
+        });
+
         if (process.env.NODE_ENV != "test") {
             this.httpServer.listen(this.listeningPort, function() {
                 self.onListen();
