@@ -3,13 +3,11 @@
  * @author Simon Urli <simon@the6thscreen.fr>
  */
 
-/// <reference path="../libsdef/node-rest-client.d.ts" />
-
 /// <reference path="./Logger.ts" />
 /// <reference path="./RestClientResponse.ts" />
 /// <reference path="./RestClientSync.ts" />
 
-var NodeRestClient = require('node-rest-client').Client;
+var NodeRestClient : any = require('node-rest-client').Client;
 
 /**
  * Represents a REST client.
@@ -25,7 +23,7 @@ class RestClient {
      * @type ClientObject
      * @static
      */
-    static client : ClientObject = null;
+    static client : any = null;
 
     /**
      * Return the REST client from lib.
@@ -64,10 +62,11 @@ class RestClient {
 
         var returnSuccess : Function = function(data, response) {
 			var dataJSON;
-			if(typeof(data) == "object") {
-				dataJSON = data;
-			} else {
+
+			if(typeof(data) == "string" || data instanceof Buffer) {
 				dataJSON = JSON.parse(data);
+			} else {
+				dataJSON = data;
 			}
 			var result : RestClientResponse = new RestClientResponse(true, response, dataJSON);
             success(result);

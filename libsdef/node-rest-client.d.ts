@@ -3,7 +3,7 @@ declare module "node-rest-client" {
 }
 
 interface ClientObject {
-    get(url : string, fn: Function) : RequestObject;
+    get(url : string, args : any, fn: Function) : RequestObject;
     post(url : string, args : any, fn: Function) : RequestObject;
     put(url : string, args : any, fn: Function) : RequestObject;
     patch(url : string, args : any, fn: Function) : RequestObject;
