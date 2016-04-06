@@ -45,7 +45,7 @@ class RestClientResponse {
 	private _statusCode : number = 0;
 
 	constructor(success : boolean, response : any, data : any = null) {
-		if (response.statusCode !== undefined) {
+		if (response !== undefined && response.statusCode !== undefined) {
 			this._statusCode = response.statusCode;
 		} else {
 			this._statusCode = -1;
