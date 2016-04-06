@@ -71,8 +71,15 @@ class RestClient {
 			success(result);
 		};
 
-		var returnFail : Function = function(error) {
-			var result : RestClientResponse = new RestClientResponse(false, error);
+		var returnFail : Function = function(data, response) {
+			var dataJSON;
+
+			if(typeof(data) == "string" || data instanceof Buffer) {
+				dataJSON = JSON.parse(data);
+			} else {
+				dataJSON = data;
+			}
+			var result : RestClientResponse = new RestClientResponse(false, response, dataJSON);
 			fail(result);
 		};
 
