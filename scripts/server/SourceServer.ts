@@ -36,9 +36,10 @@ class SourceServer extends Server {
      *
      * @param {number} listeningPort - Listening port.
      * @param {Array<string>} arguments - Command line arguments.
-     */
-    constructor(listeningPort : number, arguments : Array<string>) {
-        super(listeningPort, arguments);
+	 * @param {string} uploadDir - Upload directory path.
+	 */
+	constructor(listeningPort : number, arguments : Array<string>, uploadDir : string = "") {
+        super(listeningPort, arguments, uploadDir);
         this._clientCalls = new Array<ClientCall>();
         this._mapSocketIdHash = new Array<string>();
 	}
