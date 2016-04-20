@@ -66,8 +66,9 @@ class Server {
      *
      * @param {number} listeningPort - Listening port.
      * @param {Array<string>} arguments - Command line arguments.
-     */
-    constructor(listeningPort : number, arguments : Array<string>) {
+	 * @param {string} uploadDir - Upload directory path.
+	 */
+	constructor(listeningPort : number, arguments : Array<string>, uploadDir : string = "") {
         this.namespaceManagers = new Array<NamespaceManager>();
         this.listeningPort = listeningPort;
 
@@ -76,7 +77,11 @@ class Server {
         this.app = express();
         this.app.use(bodyParser.json()); // for parsing application/json
         this.app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-        this.app.use(multer()); // for parsing multipart/form-data
+		if(uploadDir != "") {
+			this.app.use(multer({ dest: uploadDir })); // for parsing multipart/form-data
+		} else {
+			this.app.use(multer()); // for parsing multipart/form-data
+		}
 
 
         this.app.use(function(req, res, next) {
