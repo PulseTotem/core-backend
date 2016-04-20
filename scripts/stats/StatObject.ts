@@ -8,7 +8,7 @@ class StatObject {
 
     private _collection : string;
 
-    private _hashId : string;
+    private _profilId : string;
 
     private _ip : string;
 
@@ -17,10 +17,10 @@ class StatObject {
     private _data : any;
 
 
-    constructor(date:Date = new Date(), collection:string = "", hashId:string = "", ip:string = "", data:any = null) {
+    constructor(date:Date = new Date(), collection:string = "", profilId:string = "", ip:string = "", data:any = null) {
         this._date = date;
         this._collection = collection;
-        this._hashId = hashId;
+        this._profilId = profilId;
         this._ip = ip;
         this._data = data;
     }
@@ -30,8 +30,8 @@ class StatObject {
         this._collection = value;
     }
 
-    public setHashId(value:string) {
-        this._hashId = value;
+    public setProfilId(value:string) {
+        this._profilId = value;
     }
 
     public setIp(value:string) {
@@ -54,7 +54,7 @@ class StatObject {
         var result = {
             date: this._date,
             socketId: this._socketId,
-            hashId: this._hashId,
+            profilId: this._profilId,
             ip: this._ip,
             collection: this._collection
         };
