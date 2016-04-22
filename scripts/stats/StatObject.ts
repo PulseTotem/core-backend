@@ -10,6 +10,8 @@ class StatObject {
 
     private _profilId : string;
 
+    private _sdiId : string;
+
     private _ip : string;
 
     private _socketId : string;
@@ -17,9 +19,10 @@ class StatObject {
     private _data : any;
 
 
-    constructor(date:Date = new Date(), collection:string = "", profilId:string = "", ip:string = "", data:any = null) {
+    constructor(date:Date = new Date(), collection:string = "", sdiId:string = "", profilId:string = "", ip:string = "", data:any = null) {
         this._date = date;
         this._collection = collection;
+        this._sdiId = sdiId;
         this._profilId = profilId;
         this._ip = ip;
         this._data = data;
@@ -28,6 +31,10 @@ class StatObject {
 
     public setCollection(value:string) {
         this._collection = value;
+    }
+
+    public setSDIId(value : string) {
+        this._sdiId = value;
     }
 
     public setProfilId(value:string) {
@@ -54,6 +61,7 @@ class StatObject {
         var result = {
             date: this._date,
             socketId: this._socketId,
+            sdiId: this._sdiId,
             profilId: this._profilId,
             ip: this._ip,
             collection: this._collection
