@@ -123,4 +123,16 @@ class NamespaceManager {
 			failCB(new Error("Server response is not well formatted."));
 		}
     }
+
+    /**
+     * Method to return the client IP calculated from socket
+     * @returns {string} Represents the IP of the client
+     */
+    getIP() : string {
+        if (this.socket !== null) {
+            return this.socket.handshake.headers['x-forwarded-for'] || this.socket.handshake.address.address;
+        } else {
+            return "";
+        }
+    }
 }
