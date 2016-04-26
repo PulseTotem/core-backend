@@ -16,15 +16,18 @@ class StatObject {
 
     private _socketId : string;
 
+    private _hash : string;
+
     private _data : any;
 
 
-    constructor(date:Date = new Date(), collection:string = "", sdiId:string = "", profilId:string = "", ip:string = "", data:any = null) {
+    constructor(date:Date = new Date(), collection:string = "", sdiId:string = "", profilId:string = "", ip:string = "", hash:string = "", data:any = null) {
         this._date = date;
         this._collection = collection;
         this._sdiId = sdiId;
         this._profilId = profilId;
         this._ip = ip;
+        this._hash = hash;
         this._data = data;
     }
 
@@ -49,6 +52,10 @@ class StatObject {
         this._socketId = value;
     }
 
+    public setHash(value : string) {
+        this._hash = value;
+    }
+
     public setData(data : any) {
         this._data = data;
     }
@@ -64,6 +71,7 @@ class StatObject {
             sdiId: this._sdiId,
             profilId: this._profilId,
             ip: this._ip,
+            hash: this._hash,
             collection: this._collection
         };
 
