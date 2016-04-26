@@ -268,4 +268,46 @@ class SourceNamespaceManager extends NamespaceManager {
 			failCB(e);
 		});
 	}
+
+	/**
+	 * Return the SDI Id if parameters are defined. Else it returns -1.
+	 *
+	 * @method getSDIId
+	 * @returns number
+	 */
+	getSDIId() : number {
+		if (this._params != null && this._params["SDI"]) {
+			return this._params["SDI"].id;
+		} else {
+			return -1;
+		}
+	}
+
+	/**
+	 * Return the Profil Id if parameters are defined. Else it returns -1;
+	 *
+	 * @method getProfilId
+	 * @returns number
+     */
+	getProfilId() : number {
+		if (this._params != null && this._params["SDI"]) {
+			return this._params["SDI"].profilId;
+		} else {
+			return -1;
+		}
+	}
+
+	/**
+	 * Return the hash profil if parameters are defined. Else it returns empty string.
+	 *
+	 * @method getHashProfil
+	 * @returns string
+     */
+	getHashProfil() : string {
+		if (this._params != null && this._params["SDI"]) {
+			return this._params["SDI"].hashProfil;
+		} else {
+			return "";
+		}
+	}
 }
