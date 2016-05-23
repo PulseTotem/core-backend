@@ -14,7 +14,7 @@
 
 var uuid : any = require('node-uuid');
 var OAuth : any = require('oauthio');
-var NodeRestClient : any = require('node-rest-client').Client;
+var request = require('request');
 
 class SourceNamespaceManager extends NamespaceManager {
 
@@ -247,19 +247,17 @@ class SourceNamespaceManager extends NamespaceManager {
 						var apiUrl = "http://oauth.the6thscreen.fr/request/"+providerName+"/"+encodeURIComponent(url);
 
 						var args = {
-							data: data,
-							headers: headers
+							url: apiUrl,
+							headers: headers,
+							body: data
 						};
 
-						Logger.debug("Try to post with following info: ");
-						Logger.debug(args);
-
-						client.post(apiUrl, args, function (data, response) {
-							if(response.statusCode >= 200 && response.statusCode < 300) {
-								successCallback(data);
-							} else {
+						request.post(args, function (error, response, body) {
+							if (error) {
 								Logger.debug(response);
-								failCallback(data);
+								failCallback(error);
+							} else {
+								successCallback(body);
 							}
 						});
 					}
