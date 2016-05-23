@@ -208,7 +208,7 @@ class SourceNamespaceManager extends NamespaceManager {
 		OAuth.auth(providerName, {}, {
 			credentials: JSON.parse(oAuthKey)
 		})
-		.then(function (request_object) {
+		.then(function (request_object : any) {
 			// request_object contains the access_token if OAuth 2.0
 			// or the couple oauth_token,oauth_token_secret if OAuth 1.0
 			// request_object also contains methods get|post|patch|put|delete|me
@@ -236,19 +236,24 @@ class SourceNamespaceManager extends NamespaceManager {
 					} else {
 						var client = new NodeRestClient();
 
-						headers["access_token"] = request_object.access_token;
+						/*headers["access_token"] = request_object.access_token;
 						headers["oauth_token"] = request_object.oauth_token;
 						headers["oauth_token_secret"] = request_object.oauth_token_secret;
+						*/
+						headers["oauthio"] = "k=VLoeXhqFq66JBj55UFqCMyjz8wk&oauth_token="+request_object.oauth_token+"&oauth_token_secret="+request_object.oauth_token_secret+"&access_token="+request_object.access_token;
+
+						var apiUrl = "http://oauth.the6thscreen.fr/request/"+providerName+"/"+encodeURIComponent(url);
 
 						var args = {
 							data: data,
 							headers: headers
 						};
 
-						client.post(url, args, function (data, response) {
+						client.post(apiUrl, args, function (data, response) {
 							if(response.statusCode >= 200 && response.statusCode < 300) {
 								successCallback(data);
 							} else {
+								Logger.debug(response);
 								failCallback(data);
 							}
 						});
