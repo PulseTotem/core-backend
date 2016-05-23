@@ -251,6 +251,9 @@ class SourceNamespaceManager extends NamespaceManager {
 							headers: headers
 						};
 
+						Logger.debug("Try to post with following info: ");
+						Logger.debug(args);
+
 						client.post(url, args, function (data, response) {
 							if(response.statusCode >= 200 && response.statusCode < 300) {
 								successCallback(data);
