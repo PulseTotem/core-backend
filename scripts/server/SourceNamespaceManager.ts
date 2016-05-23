@@ -238,13 +238,13 @@ class SourceNamespaceManager extends NamespaceManager {
 						Logger.debug("More headers");
 						var client = new NodeRestClient();
 
-						headers["access_token"] = request_object.access_token;
-						headers["oauth_token"] = request_object.oauth_token;
-						headers["oauth_token_secret"] = request_object.oauth_token_secret;
+						//headers["access_token"] = request_object.access_token;
+						//headers["oauth_token"] = request_object.oauth_token;
+						//headers["oauth_token_secret"] = request_object.oauth_token_secret;
 
-						//headers["oauthio"] = "k=VLoeXhqFq66JBj55UFqCMyjz8wk&oauth_token="+request_object.oauth_token+"&oauth_token_secret="+request_object.oauth_token_secret+"&access_token="+request_object.access_token;
+						headers["oauthio"] = "k=VLoeXhqFq66JBj55UFqCMyjz8wk&oauth_token="+request_object.oauth_token+"&oauth_token_secret="+request_object.oauth_token_secret+"&access_token="+request_object.access_token;
 
-						//var apiUrl = "http://oauth.the6thscreen.fr/request/"+providerName+"/"+encodeURIComponent(url);
+						var apiUrl = "http://oauth.the6thscreen.fr/request/"+providerName+"/"+encodeURIComponent(url);
 
 						var args = {
 							data: data,
@@ -254,7 +254,7 @@ class SourceNamespaceManager extends NamespaceManager {
 						Logger.debug("Try to post with following info: ");
 						Logger.debug(args);
 
-						client.post(url, args, function (data, response) {
+						client.post(apiUrl, args, function (data, response) {
 							if(response.statusCode >= 200 && response.statusCode < 300) {
 								successCallback(data);
 							} else {
