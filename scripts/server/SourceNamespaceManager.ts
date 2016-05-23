@@ -201,7 +201,7 @@ class SourceNamespaceManager extends NamespaceManager {
 	 * @param {Function} successCB - Callback function when authentication is success
 	 * @param {Function} failCB - Callback function when authentication is fail
 	 */
-	manageOAuth(providerName : string, oAuthKey : string, successCB : Function, failCB : Function, headers : any = null) {
+	manageOAuth(providerName : string, oAuthKey : string, successCB : Function, failCB : Function) {
 		OAuth.setOAuthdURL("http://oauth.the6thscreen.fr/");
 		OAuth.initialize('VLoeXhqFq66JBj55UFqCMyjz8wk', '7j7FP7vPOnw5wNuhNNkxvoppRpo');
 
@@ -222,9 +222,10 @@ class SourceNamespaceManager extends NamespaceManager {
 						failCallback(err);
 					});
 				},
-				post : function (url, data, successCallback, failCallback) {
-
+				post : function (url, data, successCallback, failCallback, headers : any = null) {
+					Logger.debug("OAUth post");
 					if (headers == null) {
+						Logger.debug("No supplemntary headers");
 						var postAction : any = request_object.post(url, {
 							data: data
 						});
@@ -234,6 +235,7 @@ class SourceNamespaceManager extends NamespaceManager {
 							failCallback(err);
 						});
 					} else {
+						Logger.debug("More headers");
 						var client = new NodeRestClient();
 
 						/*headers["access_token"] = request_object.access_token;
