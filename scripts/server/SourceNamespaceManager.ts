@@ -249,7 +249,7 @@ class SourceNamespaceManager extends NamespaceManager {
 						var args = {
 							url: url,
 							headers: headers,
-							data: data
+							body: data
 						};
 
 						require('request').debug = true;
