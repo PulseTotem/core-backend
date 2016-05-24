@@ -253,7 +253,7 @@ class SourceNamespaceManager extends NamespaceManager {
 						};
 
 						request.post(args, function (error, response, body) {
-							if (error) {
+							if (error || !(response.statusCode >= 200 && response.statusCode < 300) ) {
 								Logger.debug("error in posting datas");
 								Logger.debug("Headers: ");
 								Logger.debug(headers);
