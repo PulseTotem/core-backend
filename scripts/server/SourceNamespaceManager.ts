@@ -257,8 +257,12 @@ class SourceNamespaceManager extends NamespaceManager {
 								Logger.debug("error in posting datas");
 								Logger.debug("Headers: ");
 								Logger.debug(headers);
-								Logger.debug("Form :");
-								Logger.debug(data);
+								Logger.debug("Body :");
+								Logger.debug(body);
+								Logger.debug("Error: ");
+								Logger.debug(error);
+								Logger.debug("Response:");
+								Logger.debug(response);
 								failCallback(error);
 							} else {
 								successCallback(body);
