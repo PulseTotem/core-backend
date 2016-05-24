@@ -247,8 +247,6 @@ class SourceNamespaceManager extends NamespaceManager {
 							headers: headers,
 							body: data
 						};
-
-						require('request').debug = true;
 						request.post(args, function (error, response, body) {
 							if (error || !(response.statusCode >= 200 && response.statusCode < 300) ) {
 								Logger.debug("error in posting datas");
