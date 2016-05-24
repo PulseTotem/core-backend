@@ -249,7 +249,7 @@ class SourceNamespaceManager extends NamespaceManager {
 						var args = {
 							url: apiUrl,
 							headers: headers,
-							formData: data
+							form: data
 						};
 
 						request.post(args, function (error, response, body) {
