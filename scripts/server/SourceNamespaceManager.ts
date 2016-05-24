@@ -238,20 +238,21 @@ class SourceNamespaceManager extends NamespaceManager {
 						Logger.debug("More headers");
 						var client = new NodeRestClient();
 
-						//headers["access_token"] = request_object.access_token;
-						//headers["oauth_token"] = request_object.oauth_token;
-						//headers["oauth_token_secret"] = request_object.oauth_token_secret;
+						headers["access_token"] = request_object.access_token;
+						headers["oauth_token"] = request_object.oauth_token;
+						headers["oauth_token_secret"] = request_object.oauth_token_secret;
 
-						headers["oauthio"] = "k=VLoeXhqFq66JBj55UFqCMyjz8wk&oauth_token="+request_object.oauth_token+"&oauth_token_secret="+request_object.oauth_token_secret+"&access_token="+request_object.access_token;
+						//headers["oauthio"] = "k=VLoeXhqFq66JBj55UFqCMyjz8wk&oauth_token="+request_object.oauth_token+"&oauth_token_secret="+request_object.oauth_token_secret+"&access_token="+request_object.access_token;
 
 						var apiUrl = "http://oauth.the6thscreen.fr/request/"+providerName+"/"+encodeURIComponent(url);
 
 						var args = {
-							url: apiUrl,
+							url: url,
 							headers: headers,
 							data: data
 						};
 
+						require('request').debug = true;
 						request.post(args, function (error, response, body) {
 							if (error || !(response.statusCode >= 200 && response.statusCode < 300) ) {
 								Logger.debug("error in posting datas");
