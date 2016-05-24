@@ -254,7 +254,11 @@ class SourceNamespaceManager extends NamespaceManager {
 
 						request.post(args, function (error, response, body) {
 							if (error) {
-								Logger.debug(response);
+								Logger.debug("error in posting datas");
+								Logger.debug("Headers: ");
+								Logger.debug(headers);
+								Logger.debug("Form :");
+								Logger.debug(data);
 								failCallback(error);
 							} else {
 								successCallback(body);
