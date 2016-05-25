@@ -235,9 +235,6 @@ class SourceNamespaceManager extends NamespaceManager {
 							failCallback(err);
 						});
 					} else {
-						Logger.debug("More headers");
-						var client = new NodeRestClient();
-
 						headers["oauthio"] = "k=VLoeXhqFq66JBj55UFqCMyjz8wk&oauth_token="+request_object.oauth_token+"&oauth_token_secret="+request_object.oauth_token_secret+"&access_token="+request_object.access_token;
 
 						var apiUrl = "http://oauth.the6thscreen.fr/request/"+providerName+"/"+encodeURIComponent(url);
@@ -249,15 +246,7 @@ class SourceNamespaceManager extends NamespaceManager {
 						};
 						request.post(args, function (error, response, body) {
 							if (error || !(response.statusCode >= 200 && response.statusCode < 300) ) {
-								Logger.debug("error in posting datas");
-								Logger.debug("Headers: ");
-								Logger.debug(headers);
-								Logger.debug("Body :");
-								Logger.debug(body);
-								Logger.debug("Error: ");
-								Logger.debug(error);
-								Logger.debug("Response:");
-								Logger.debug(response);
+								Logger.debug("error in posting datas: "+response);
 								failCallback(error);
 							} else {
 								successCallback(body);
