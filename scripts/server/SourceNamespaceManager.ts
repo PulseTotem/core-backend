@@ -334,4 +334,16 @@ class SourceNamespaceManager extends NamespaceManager {
 			return "";
 		}
 	}
+
+	/**
+	 * Return the Client IP if the parameter is given, else try to compute IP from socket
+	 * @returns {any}
+     */
+	getIP() : string {
+		if (this._params != null && this._params["ClientIP"]) {
+			return this._params["ClientIP"];
+		} else {
+			return super.getIP();
+		}
+	}
 }
