@@ -133,7 +133,8 @@ class NamespaceManager {
             Logger.debug("IP 1: "+this.socket.request.connection.remoteAddress);
             Logger.debug("IP 2 : "+this.socket.handshake.headers['x-forwarded-for']);
             Logger.debug("IP 3 : "+this.socket.handshake.address.address);
-            Logger.debug("IP 4 : "+this.socket.request.connection._peername);
+            Logger.debug("IP 4 : ");
+            Logger.debug(this.socket.request.connection._peername);
             return this.socket.handshake.headers['x-forwarded-for'] || this.socket.handshake.address.address;
         } else {
             return "";
