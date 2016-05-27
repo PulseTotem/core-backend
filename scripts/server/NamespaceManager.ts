@@ -130,14 +130,14 @@ class NamespaceManager {
      */
     getIP() : string {
         if (this.socket !== null) {
-            Logger.debug("IP 1: ");
+            /*Logger.debug("IP 1: ");
             Logger.debug(this.socket.request.connection);
             Logger.debug("IP 2 : ");
             Logger.debug(this.socket.handshake.headers);
             Logger.debug("IP 3 : ");
             Logger.debug(this.socket.handshake.address);
             Logger.debug("IP 4 : ");
-            Logger.debug(this.socket.request.connection._peername);
+            Logger.debug(this.socket.request.connection._peername);*/
             return this.socket.handshake.headers['x-forwarded-for'] || this.socket.handshake.address.address;
         } else {
             return "";
