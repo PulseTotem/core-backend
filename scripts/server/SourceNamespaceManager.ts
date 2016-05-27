@@ -93,6 +93,14 @@ class SourceNamespaceManager extends NamespaceManager {
 	}
 
 	/**
+	 * Get ClientCall of the call
+	 * @returns {ClientCall}
+     */
+	public getClientCall() : ClientCall {
+		return this._clientCall;
+	}
+
+	/**
 	 * Check validity of the parameters given the mandatory param keys
 	 * @param paramNames List of mandatory param keys
 	 * @returns {boolean} Return false if one parameter is not defined. True if all param keys are found.
