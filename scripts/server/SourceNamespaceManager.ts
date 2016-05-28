@@ -63,6 +63,7 @@ class SourceNamespaceManager extends NamespaceManager {
 		this.intervalTimer = null;
 
         super.addListenerToSocket('newCall', this.processNewCall);
+		super.addListenerToSocket('RefreshInfos', this.refreshInfos);
     }
 
     /**
@@ -114,6 +115,25 @@ class SourceNamespaceManager extends NamespaceManager {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Process to force refresh Infos.
+	 *
+	 * @method refreshInfos
+	 * @param {Object} data - Data for refresh Infos.
+	 * @param {SourceNamespaceManager} self - The SourceNamespaceManager's instance.
+	 */
+	refreshInfos(data : any, self : SourceNamespaceManager = null) {
+		Logger.debug("RefreshInfos");
+		Logger.debug(data);
+
+		if (self == null) {
+			self = this;
+		}
+
+		var callBack = self.getClientCall().getCallCallback();
+		callBack(self.getClientCall().getCallParams(), self);
 	}
 
 
