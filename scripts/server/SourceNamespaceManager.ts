@@ -51,6 +51,8 @@ class SourceNamespaceManager extends NamespaceManager {
 	 */
 	private _params : any;
 
+	private _canBeRefreshed : boolean;
+
     /**
      * Constructor.
      *
@@ -61,6 +63,7 @@ class SourceNamespaceManager extends NamespaceManager {
         super(socket);
 
 		this.intervalTimer = null;
+		this._canBeRefreshed = true;
 
         super.addListenerToSocket('newCall', this.processNewCall);
 		super.addListenerToSocket('RefreshInfos', this.refreshInfos);
@@ -132,8 +135,17 @@ class SourceNamespaceManager extends NamespaceManager {
 			self = this;
 		}
 
-		var callBack = self.getClientCall().getCallCallback();
-		callBack(self.getClientCall().getCallParams(), self);
+		var switchOnAuthorizeRefresh = function () {
+			self._canBeRefreshed = true;
+		};
+
+		if (self._canBeRefreshed) {
+			var callBack = self.getClientCall().getCallCallback();
+			callBack(self.getClientCall().getCallParams(), self);
+			self._canBeRefreshed = false;
+			
+			setTimeout(switchOnAuthorizeRefresh, 3000);
+		}
 	}
 
 
