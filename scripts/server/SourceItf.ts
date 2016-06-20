@@ -58,7 +58,7 @@ class SourceItf {
 	public checkParams(paramNames : Array<string>) : boolean {
 		for (var i = 0; i < paramNames.length; i++) {
 			var paramName = paramNames[i];
-			if (this._params[paramName] == undefined) {
+			if(typeof(this._params[paramName]) == "undefined") {
 				Logger.error("ParameterError : the following parameter is undefined : "+paramName);
 				return false;
 			}
