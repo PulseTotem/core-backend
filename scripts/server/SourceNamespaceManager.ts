@@ -242,7 +242,7 @@ class SourceNamespaceManager extends NamespaceManager {
 	 * @param {Function} failCB - Callback function when authentication is fail
 	 */
 	manageOAuth(providerName : string, oAuthKey : string, successCB : Function, failCB : Function) {
-		OAuth.setOAuthdURL("https://oauthd.pulsetotem.fr/");
+		OAuth.setOAuthdURL("https://oauthd.pulsetotem.fr");
 		OAuth.initialize('zTth1pnoAfmRXwRDKoLe1ng47ng', 'Kn8Zg1L3i3feQGnmkVjYCSqY2xk');
 
 		OAuth.auth(providerName, {}, {
