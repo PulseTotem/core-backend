@@ -242,8 +242,8 @@ class SourceNamespaceManager extends NamespaceManager {
 	 * @param {Function} failCB - Callback function when authentication is fail
 	 */
 	manageOAuth(providerName : string, oAuthKey : string, successCB : Function, failCB : Function) {
-		OAuth.setOAuthdURL("http://oauth.the6thscreen.fr/");
-		OAuth.initialize('VLoeXhqFq66JBj55UFqCMyjz8wk', '7j7FP7vPOnw5wNuhNNkxvoppRpo');
+		OAuth.setOAuthdURL("https://oauthd.pulsetotem.fr/");
+		OAuth.initialize('zTth1pnoAfmRXwRDKoLe1ng47ng', 'Kn8Zg1L3i3feQGnmkVjYCSqY2xk');
 
 		OAuth.auth(providerName, {}, {
 			credentials: JSON.parse(oAuthKey)
@@ -275,9 +275,9 @@ class SourceNamespaceManager extends NamespaceManager {
 							failCallback(err);
 						});
 					} else {
-						headers["oauthio"] = "k=VLoeXhqFq66JBj55UFqCMyjz8wk&oauth_token="+request_object.oauth_token+"&oauth_token_secret="+request_object.oauth_token_secret+"&access_token="+request_object.access_token;
+						headers["oauthio"] = "k=zTth1pnoAfmRXwRDKoLe1ng47ng&oauth_token="+request_object.oauth_token+"&oauth_token_secret="+request_object.oauth_token_secret+"&access_token="+request_object.access_token;
 
-						var apiUrl = "http://oauth.the6thscreen.fr/request/"+providerName+"/"+encodeURIComponent(url);
+						var apiUrl = "https://oauthd.pulsetotem.fr/request/"+providerName+"/"+encodeURIComponent(url);
 
 						var args = {
 							url: apiUrl,
