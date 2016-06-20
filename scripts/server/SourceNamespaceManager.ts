@@ -112,7 +112,7 @@ class SourceNamespaceManager extends NamespaceManager {
 	public checkParams(paramNames : Array<string>) : boolean {
 		for (var i = 0; i < paramNames.length; i++) {
 			var paramName = paramNames[i];
-			if (this._params[paramName] == undefined) {
+			if (typeof(this._params[paramName]) == "undefined") {
 				Logger.error("ParameterError : the following parameter is undefined : "+paramName);
 				return false;
 			}
@@ -242,8 +242,8 @@ class SourceNamespaceManager extends NamespaceManager {
 	 * @param {Function} failCB - Callback function when authentication is fail
 	 */
 	manageOAuth(providerName : string, oAuthKey : string, successCB : Function, failCB : Function) {
-		OAuth.setOAuthdURL("https://oauthd.pulsetotem.fr/");
-		OAuth.initialize('zTth1pnoAfmRXwRDKoLe1ng47ng', 'Kn8Zg1L3i3feQGnmkVjYCSqY2xk');
+		OAuth.setOAuthdURL("http://oauth.the6thscreen.fr/");
+		OAuth.initialize('VLoeXhqFq66JBj55UFqCMyjz8wk', '7j7FP7vPOnw5wNuhNNkxvoppRpo');
 
 		OAuth.auth(providerName, {}, {
 			credentials: JSON.parse(oAuthKey)
