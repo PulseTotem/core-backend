@@ -242,8 +242,8 @@ class SourceNamespaceManager extends NamespaceManager {
 	 * @param {Function} failCB - Callback function when authentication is fail
 	 */
 	manageOAuth(providerName : string, oAuthKey : string, successCB : Function, failCB : Function) {
-		OAuth.setOAuthdURL("http://oauth.the6thscreen.fr/");
-		OAuth.initialize('VLoeXhqFq66JBj55UFqCMyjz8wk', '7j7FP7vPOnw5wNuhNNkxvoppRpo');
+		OAuth.setOAuthdURL("https://oauthd.pulsetotem.fr/");
+		OAuth.initialize('zTth1pnoAfmRXwRDKoLe1ng47ng', 'Kn8Zg1L3i3feQGnmkVjYCSqY2xk');
 
 		OAuth.auth(providerName, {}, {
 			credentials: JSON.parse(oAuthKey)
