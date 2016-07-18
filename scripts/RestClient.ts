@@ -31,9 +31,9 @@ class RestClient {
 	 * @static
 	 */
 	static getClient() {
-		//if(RestClient.client == null) {
+		if(RestClient.client == null) {
 			RestClient.client = new NodeRestClient();
-		//}
+		}
 		return RestClient.client;
 	}
 
@@ -79,6 +79,7 @@ class RestClient {
 			} else {
 				dataJSON = data;
 			}
+
 			var result : RestClientResponse = new RestClientResponse(false, response, dataJSON);
 			fail(result);
 		};
