@@ -31,9 +31,9 @@ class RestClient {
 	 * @static
 	 */
 	static getClient() {
-		if(RestClient.client == null) {
+		//if(RestClient.client == null) {
 			RestClient.client = new NodeRestClient();
-		}
+		//}
 		return RestClient.client;
 	}
 
