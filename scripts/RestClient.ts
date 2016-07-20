@@ -124,7 +124,9 @@ class RestClient {
 				callbacks[1](data, response);
 			}
 		});
-		req.on('error', callbacks[1]);
+		req.on('error', function (error) {
+			callbacks[1]({"error":error.toString()}, error);
+		});
 	}
 
 	/**
@@ -150,7 +152,9 @@ class RestClient {
 				callbacks[1](data, response);
 			}
 		});
-		req.on('error', callbacks[1]);
+		req.on('error', function (error) {
+			callbacks[1]({"error":error.toString()}, error);
+		});
 	}
 
 	/**
@@ -176,7 +180,9 @@ class RestClient {
 				callbacks[1](data, response);
 			}
 		});
-		req.on('error', callbacks[1]);
+		req.on('error', function (error) {
+			callbacks[1]({"error":error.toString()}, error);
+		});
 	}
 
 	/**
@@ -202,7 +208,9 @@ class RestClient {
 				callbacks[1](data, response);
 			}
 		});
-		req.on('error', callbacks[1]);
+		req.on('error', function (error) {
+			callbacks[1]({"error":error.toString()}, error);
+		});
 	}
 
 	/**
@@ -227,7 +235,9 @@ class RestClient {
 				callbacks[1](data, response);
 			}
 		});
-		req.on('error', callbacks[1]);
+		req.on('error', function (error) {
+			callbacks[1]({"error":error.toString()}, error);
+		});
 	}
 
 }
