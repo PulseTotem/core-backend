@@ -79,6 +79,7 @@ class RestClient {
 			} else {
 				dataJSON = data;
 			}
+
 			var result : RestClientResponse = new RestClientResponse(false, response, dataJSON);
 			fail(result);
 		};
@@ -123,7 +124,9 @@ class RestClient {
 				callbacks[1](data, response);
 			}
 		});
-		req.on('error', callbacks[1]);
+		req.on('error', function (error) {
+			callbacks[1]({"error":error.toString()}, error);
+		});
 	}
 
 	/**
@@ -149,7 +152,9 @@ class RestClient {
 				callbacks[1](data, response);
 			}
 		});
-		req.on('error', callbacks[1]);
+		req.on('error', function (error) {
+			callbacks[1]({"error":error.toString()}, error);
+		});
 	}
 
 	/**
@@ -175,7 +180,9 @@ class RestClient {
 				callbacks[1](data, response);
 			}
 		});
-		req.on('error', callbacks[1]);
+		req.on('error', function (error) {
+			callbacks[1]({"error":error.toString()}, error);
+		});
 	}
 
 	/**
@@ -201,7 +208,9 @@ class RestClient {
 				callbacks[1](data, response);
 			}
 		});
-		req.on('error', callbacks[1]);
+		req.on('error', function (error) {
+			callbacks[1]({"error":error.toString()}, error);
+		});
 	}
 
 	/**
@@ -226,7 +235,9 @@ class RestClient {
 				callbacks[1](data, response);
 			}
 		});
-		req.on('error', callbacks[1]);
+		req.on('error', function (error) {
+			callbacks[1]({"error":error.toString()}, error);
+		});
 	}
 
 }
