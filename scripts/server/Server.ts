@@ -1,5 +1,5 @@
 /**
- * @author Christian Brel <christian@the6thscreen.fr, ch.brel@gmail.com>
+ * @author Christian Brel <christian@pulsetotem.fr, ch.brel@gmail.com>
  */
 
 /// <reference path="../Logger.ts" />
@@ -7,6 +7,7 @@
 /// <reference path="./NamespaceManager"/>
 
 
+var fs : any = require("fs");
 var http : any = require("http");
 var express : any = require("express");
 var bodyParser : any = require("body-parser");
@@ -61,6 +62,22 @@ class Server {
      */
     namespaceManagers : Array<NamespaceManager>;
 
+	/**
+	 * Server's version.
+	 *
+	 * @property version
+	 * @type string
+	 */
+	version : string;
+
+	/**
+	 * Server's name.
+	 *
+	 * @property name
+	 * @type string
+	 */
+	name : string;
+
     /**
      * Constructor.
      *
@@ -71,6 +88,8 @@ class Server {
 	constructor(listeningPort : number, arguments : Array<string>, uploadDir : string = "") {
         this.namespaceManagers = new Array<NamespaceManager>();
         this.listeningPort = listeningPort;
+		this.name = "Dev Server";
+		this.version = "Dev Mode";
 
         this._argumentsProcess(arguments);
 
@@ -216,11 +235,35 @@ class Server {
         });
 
         if (process.env.NODE_ENV != "test") {
-            this.httpServer.listen(this.listeningPort, function() {
-                self.onListen();
-            });
+			self._retrieveVersion(function() {
+				self.httpServer.listen(self.listeningPort, function() {
+					self.onListen();
+				});
+			});
         }
     }
+
+	/**
+	 * Retrieve Server Version.
+	 *
+	 * @method _retrieveVersion
+	 * @param {Function} callback - Callback after retrieving version
+	 * @private
+	 */
+	private _retrieveVersion(callback : Function) {
+		var self = this;
+
+		fs.stat(__dirname + '/../package.json', function(err, stat) {
+			if(err == null) {
+				var packageJson : any = require(__dirname + '/../package.json');
+				self.name = packageJson.name;
+				self.version = packageJson.version;
+				callback();
+			} else {
+				callback();
+			}
+		});
+	}
 
     /**
      * Declare a namespace for server.
@@ -293,6 +336,7 @@ class Server {
      * @method onListen
      */
     onListen() {
+		Logger.info(this.name + ' - v' + this.version);
         Logger.info("Server listening on *:" + this.listeningPort);
     }
 
