@@ -1,25 +1,10 @@
 /**
- * @author Christian Brel <christian@the6thscreen.fr, ch.brel@gmail.com>
+ * @author Christian Brel <christian@pulsetotem.fr, ch.brel@gmail.com>
  */
 /// <reference path="../t6s-core/core/libsdef/node.d.ts" />
 /// <reference path="./LoggerLevel.ts" />
 
-var colors : any;
-
-try {
-	colors = require('colors');
-} catch(e) {
-	var returnFunc = function (str) {
-		return str;
-	};
-
-	String.prototype["green"] = returnFunc;
-	String.prototype["blue"] = returnFunc;
-	String.prototype["orange"] = returnFunc;
-	String.prototype["red"] = returnFunc;
-}
-
-var moment : any = require('moment');
+var winston : any = require('winston');
 
 /**
  * Represents a logger with a coloration option.
@@ -47,6 +32,88 @@ class Logger {
 	 */
 	static level : LoggerLevel = LoggerLevel.Error;
 
+	/**
+	 * Winston Logger.
+	 *
+	 * @property logger
+	 * @type any (Winston Logger)
+	 * @static
+	 * @default null
+	 */
+	static logger : any = null;
+
+	/**
+	 * Return an instance of Winston Logger.
+	 *
+	 * @method getLogger
+	 * @static
+	 */
+	static getLogger() {
+		if(Logger.logger == null) {
+			Logger.buildLogger();
+		}
+
+		return Logger.logger;
+	}
+
+	/**
+	 * Build Winston Logger instance.
+	 *
+	 * @method buildLogger
+	 * @static
+	 */
+	static buildLogger() {
+		Logger.logger = new winston.Logger({
+			exitOnError: false
+		});
+
+		Logger.manageConsoleTransport();
+	}
+
+	/**
+	 * Manage Console transport for Winston Logger instance.
+	 *
+	 * @method manageConsoleTransport
+	 * @static
+	 */
+	static manageConsoleTransport() {
+		var options : any = {
+			handleExceptions: true,
+			prettyPrint: true,
+			timestamp : true
+		};
+
+		options["colorize"] = Logger.color;
+
+		switch(Logger.level) {
+			case LoggerLevel.Error :
+				options["level"] = 'error';
+				break;
+			case LoggerLevel.Warning :
+				options["level"] = 'warn';
+				break;
+			case LoggerLevel.Info :
+				options["level"] = 'info';
+				break;
+			case LoggerLevel.Verbose :
+				options["level"] = 'verbose';
+				break;
+			case LoggerLevel.Debug :
+				options["level"] = 'debug';
+				break;
+			default :
+				options["level"] = 'info';
+		}
+
+		if(Logger.logger.transports.length > 0) {
+			if(typeof(Logger.logger.transports["console"]) != "undefined") {
+				Logger.logger.remove(winston.transports.Console);
+			}
+		}
+
+		Logger.logger.add(winston.transports.Console, options);
+	}
+
     /**
      * Change the color status.
      *
@@ -56,6 +123,7 @@ class Logger {
      */
     static useColor(status : boolean) {
         Logger.color = status;
+		Logger.buildLogger();
     }
 
 	/**
@@ -67,6 +135,7 @@ class Logger {
 	 */
 	static setLevel(level : LoggerLevel) {
 		Logger.level = level;
+		Logger.buildLogger();
 	}
 
     /**
@@ -75,18 +144,23 @@ class Logger {
      * @method debug
      * @static
      * @param {string} msg - The message to log.
+	 * @param {any} metadata - Metadata added to message
      */
-    static debug(msg : any) {
-	    if (Logger.level === LoggerLevel.Debug) {
-		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
-			    console.log("["+moment().format().green+"]\t"+msg.green);
-		    } else {
-			    console.log("["+moment().format()+"]\t");
-			    // keep it as it is to display the object
-			    console.log(msg);
-		    }
-	    }
+    static debug(msg : any, metadata : any = {}) {
+		Logger.getLogger().debug(msg, metadata);
     }
+
+	/**
+	 * Log message as Verbose Level.
+	 *
+	 * @method verbose
+	 * @static
+	 * @param {string} msg - The message to log.
+	 * @param {any} metadata - Metadata added to message
+	 */
+	static verbose(msg : any, metadata : any = {}) {
+		Logger.getLogger().verbose(msg, metadata);
+	}
 
     /**
      * Log message as Info Level.
@@ -94,17 +168,10 @@ class Logger {
      * @method info
      * @static
      * @param {string} msg - The message to log.
+	 * @param {any} metadata - Metadata added to message
      */
-    static info(msg : any) {
-	    if (Logger.level === LoggerLevel.Debug || Logger.level === LoggerLevel.Info) {
-		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
-			    console.log("["+moment().format().blue+"] \t"+msg.blue);
-		    } else {
-			    console.log("["+moment().format()+"]\t");
-			    // keep it as it is to display the object
-			    console.log(msg);
-		    }
-	    }
+    static info(msg : any, metadata : any = {}) {
+		Logger.getLogger().info(msg, metadata);
     }
 
     /**
@@ -113,17 +180,10 @@ class Logger {
      * @method warn
      * @static
      * @param {string} msg - The message to log.
+	 * @param {any} metadata - Metadata added to message
      */
-    static warn(msg : any) {
-	    if (Logger.level === LoggerLevel.Debug || Logger.level === LoggerLevel.Info || Logger.level === LoggerLevel.Warning) {
-		    if (Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
-			    console.log("["+moment().format().orange+"]\t"+msg.orange);
-		    } else {
-			    console.log("["+moment().format()+"]\t");
-			    // keep it as it is to display the object
-			    console.log(msg);
-		    }
-	    }
+    static warn(msg : any, metadata : any = {}) {
+		Logger.getLogger().warn(msg, metadata);
     }
 
     /**
@@ -132,15 +192,10 @@ class Logger {
      * @method error
      * @static
      * @param {string} msg - The message to log.
+	 * @param {any} metadata - Metadata added to message
      */
-    static error(msg : any) {
-        if(Logger.color && msg != null && msg != undefined && (typeof(msg) == "string" || msg instanceof String)) {
-            console.error("["+moment().format().red+"]\t"+msg.red);
-        } else {
-	        console.log("["+moment().format()+"]\t");
-	        // keep it as it is to display the object
-	        console.log(msg);
-        }
+    static error(msg : any, metadata : any = {}) {
+		Logger.getLogger().error(msg, metadata);
     }
 
 }
