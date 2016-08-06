@@ -12,6 +12,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks('grunt-mocha-istanbul');
+    grunt.loadNpmTasks('grunt-bumpup');
 
     // tasks
     grunt.initConfig({
@@ -147,7 +148,13 @@ module.exports = function (grunt) {
             build: ['build/'],
             doc: ['doc'],
             test: ['build/tests/', 'build/coverage/']
-        }
+        },
+// ---------------------------------------------
+
+// ---------------------------------------------
+//                                    bump task
+// ---------------------------------------------
+      bumpup: 'package.json'
 // ---------------------------------------------
     });
 
