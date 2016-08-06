@@ -5,6 +5,7 @@
 /// <reference path="./LoggerLevel.ts" />
 
 var winston : any = require('winston');
+var path : any = require('path');
 
 /**
  * Represents a logger with a coloration option.
@@ -138,6 +139,46 @@ class Logger {
 		Logger.buildLogger();
 	}
 
+	/**
+	 * Complete metadata in params with some info like method, line etc... where log was done.
+	 *
+	 * @method completeMetadata
+	 * @static
+	 * @param {any} metadata - Metadata to complete
+	 * @param {boolean} withStack - Boolean to choose to add stack or not.
+	 */
+	static completeMetadata(metadata : any = {}, withStack : boolean = false) {
+		// https://github.com/baryon/tracer/blob/master/lib/console.js
+		var stackReg = /at\s+(.*)\s+\((.*):(\d*):(\d*)\)/i;
+		var stackReg2 = /at\s+()(.*):(\d*):(\d*)/i;
+
+		var err : any = new Error();
+		var stack = err.stack;
+		var stacksplit = stack.split('\n');
+		var stacklist = stacksplit.slice(3);
+
+		var data : any = {};
+
+		var s = stacklist[0];
+
+		var sp = stackReg.exec(s) || stackReg2.exec(s);
+
+		if (sp && sp.length === 5) {
+			data.method = sp[1];
+			data.path = sp[2];
+			data.line = sp[3];
+			data.pos = sp[4];
+
+			if(withStack) {
+				data.stack = stacklist.join('\n');
+			}
+		}
+
+		metadata.logDetails = data;
+
+		return metadata;
+	}
+
     /**
      * Log message as Debug Level.
      *
@@ -147,7 +188,7 @@ class Logger {
 	 * @param {any} metadata - Metadata added to message
      */
     static debug(msg : any, metadata : any = {}) {
-		Logger.getLogger().debug(msg, metadata);
+		Logger.getLogger().debug(msg, Logger.completeMetadata(metadata));
     }
 
 	/**
@@ -159,7 +200,7 @@ class Logger {
 	 * @param {any} metadata - Metadata added to message
 	 */
 	static verbose(msg : any, metadata : any = {}) {
-		Logger.getLogger().verbose(msg, metadata);
+		Logger.getLogger().verbose(msg, Logger.completeMetadata(metadata));
 	}
 
     /**
@@ -171,7 +212,7 @@ class Logger {
 	 * @param {any} metadata - Metadata added to message
      */
     static info(msg : any, metadata : any = {}) {
-		Logger.getLogger().info(msg, metadata);
+		Logger.getLogger().info(msg, Logger.completeMetadata(metadata));
     }
 
     /**
@@ -183,7 +224,7 @@ class Logger {
 	 * @param {any} metadata - Metadata added to message
      */
     static warn(msg : any, metadata : any = {}) {
-		Logger.getLogger().warn(msg, metadata);
+		Logger.getLogger().warn(msg, Logger.completeMetadata(metadata));
     }
 
     /**
@@ -195,7 +236,7 @@ class Logger {
 	 * @param {any} metadata - Metadata added to message
      */
     static error(msg : any, metadata : any = {}) {
-		Logger.getLogger().error(msg, metadata);
+		Logger.getLogger().error(msg, Logger.completeMetadata(metadata, true));
     }
 
 }
