@@ -182,7 +182,6 @@ class Logger {
 					name: 'pulsetotem.winston',
 					properties: {
 						type: 'fanout',
-						passive: true,
 						durable: false,
 						autoDelete: false
 					}
