@@ -178,7 +178,15 @@ class Logger {
 			connection.end();
 
 			var options : any = {
-				level: 'debug'
+				level: 'debug',
+				exchange: {
+					name: 'pulsetotem.winston',
+					properties: {
+						type: 'fanout',
+						durable: false,
+						autoDelete: false
+					}
+				}
 			};
 
 			Logger.logger.add(winston_amqp.AMQP, options);
@@ -289,7 +297,7 @@ class Logger {
 		var completeMeta : any = Logger.completeMetadata(metadata);
 		completeMeta.logDetails["level"] = 'debug';
 		Logger.getLogger().log(completeMeta.logDetails["level"], msg, completeMeta);
-    }
+	}
 
 	/**
 	 * Log message as Verbose Level.
