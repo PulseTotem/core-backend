@@ -152,6 +152,8 @@ class Logger {
 			}
 		}
 
+		var connectionSuccess : boolean = false;
+
 		var connection : any = amqp.createConnection({
 			host: 'localhost',
 			port: 5672,
@@ -165,10 +167,13 @@ class Logger {
 		connection.on('error', function(err){
 			connection.end();
 
-			console.log("Logger AMQP Transport can't be added.")
+			if(!connectionSuccess) {
+				console.log("Logger AMQP Transport can't be added.")
+			}
 		});
 
 		connection.on('ready', function () {
+			connectionSuccess = true;
 			connection.end();
 
 			var options : any = {
