@@ -5,7 +5,9 @@
 /// <reference path="./LoggerLevel.ts" />
 
 var winston : any = require('winston');
+var winston_amqp : any = require('winston-amqp');
 var path : any = require('path');
+var amqp : any = require('amqp');
 
 /**
  * Represents a logger with a coloration option.
@@ -69,6 +71,7 @@ class Logger {
 		});
 
 		Logger.manageConsoleTransport();
+		Logger.manageAMQPTransport();
 	}
 
 	/**
@@ -113,6 +116,46 @@ class Logger {
 		}
 
 		Logger.logger.add(winston.transports.Console, options);
+	}
+
+	/**
+	 * Manage AMQP transport for Winston Logger instance.
+	 *
+	 * @method manageAMQPTransport
+	 * @static
+	 */
+	static manageAMQPTransport() {
+		if(Logger.logger.transports.length > 0) {
+			if(typeof(Logger.logger.transports["amqp"]) != "undefined") {
+				Logger.logger.remove('amqp');
+			}
+		}
+
+		var connection : any = amqp.createConnection({
+			host: 'localhost',
+			port: 5672,
+			vhost: '/',
+			login: 'guest',
+			password: 'guest'
+		}, {
+			reconnect: false
+		});
+
+		connection.on('error', function(err){
+			connection.end();
+
+			console.log("Logger AMQP Transport can't be added.")
+		});
+
+		connection.on('ready', function () {
+			connection.end();
+
+			var options : any = {
+				level: 'debug'
+			};
+
+			Logger.logger.add(winston_amqp.AMQP, options);
+		});
 	}
 
     /**
