@@ -1,7 +1,8 @@
 /**
- * @author Simon Urli <simon@the6thscreen.fr>
+ * @author Simon Urli <simon@pulsetotem.fr>
+ * @author Christian Brel <christian@pulsetotem.fr, ch.brel@gmail.com>
  */
 
 enum LoggerLevel {
-	Error, Warning, Info, Debug
+	Error, Warning, Info, Verbose, Debug
 }
