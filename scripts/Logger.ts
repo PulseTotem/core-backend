@@ -4,6 +4,7 @@
 /// <reference path="../t6s-core/core/libsdef/node.d.ts" />
 /// <reference path="./LoggerLevel.ts" />
 
+var fs : any = require('fs');
 var winston : any = require('winston');
 var winston_amqp : any = require('winston-amqp');
 var path : any = require('path');
@@ -15,6 +16,26 @@ var amqp : any = require('amqp');
  * @class Logger
  */
 class Logger {
+	/**
+	 * From.
+	 *
+	 * @property from
+	 * @type string
+	 * @static
+	 * @default true
+	 */
+	static from : string = null;
+
+	/**
+	 * Version.
+	 *
+	 * @property version
+	 * @type string
+	 * @static
+	 * @default true
+	 */
+	static version : string = null;
+
     /**
      * Status of color mode.
      *
@@ -183,6 +204,25 @@ class Logger {
 	}
 
 	/**
+	 * Retrieve information about running service.
+	 *
+	 * @method retrieveFromVersionInformation
+	 * @static
+	 */
+	static retrieveFromVersionInformation() {
+		try {
+			var stats = fs.statSync(__dirname + '/../package.json');
+			var packageJson : any = require(__dirname + '/../package.json');
+			Logger.from = packageJson.name;
+			Logger.version = packageJson.version;
+		}
+		catch(err) {
+			Logger.from = "Unknown service";
+			Logger.version = "Unknown version";
+		}
+	}
+
+	/**
 	 * Complete metadata in params with some info like method, line etc... where log was done.
 	 *
 	 * @method completeMetadata
@@ -191,6 +231,11 @@ class Logger {
 	 * @param {boolean} withStack - Boolean to choose to add stack or not.
 	 */
 	static completeMetadata(metadata : any = {}, withStack : boolean = false) {
+		if(Logger.from == null || Logger.version == null) {
+			Logger.retrieveFromVersionInformation();
+		}
+
+
 		// https://github.com/baryon/tracer/blob/master/lib/console.js
 		var stackReg = /at\s+(.*)\s+\((.*):(\d*):(\d*)\)/i;
 		var stackReg2 = /at\s+()(.*):(\d*):(\d*)/i;
@@ -200,7 +245,10 @@ class Logger {
 		var stacksplit = stack.split('\n');
 		var stacklist = stacksplit.slice(3);
 
-		var data : any = {};
+		var data : any = {
+			"from" : Logger.from,
+			"version" : Logger.version
+		};
 
 		var s = stacklist[0];
 
